@@ -36,6 +36,9 @@ public:
     Uint32 rawColor(Uint8 r, Uint8 g, Uint8 b) const;
     Uint32 rawColor(SDL_Color color) const;
     void fill(Uint32 color);
+    void drawRect(int x, int y, int w, int h, SDL_Color color);
+    void drawRect(const SDL_Rect *rect, Uint32 color);
+    void fillRect(int x, int y, int w, int h, SDL_Color color);
     void fillRect(const SDL_Rect *rect, Uint32 color);
     void fillRect(int x, int y, int w, int h, Uint32 color);
     void blit(const Surface& src, const SDL_Rect *srcRect, SDL_Rect *dstPos);

@@ -50,8 +50,14 @@ App::App()
     for(double a = 0; a < 6.283185307179586; a += 6.283185307179586/20.0)
         bg.drawLine(cx, cy, (int)(cx + cos(a) * r), (int)(cy + sin(a) * r), line_color);
 
-    // draw shaded triangle:
+    SDL_Color col0 = {0, 0, 0};
     SDL_Color col1 = {255, 0, 0}, col2 = {0, 255, 0}, col3 = {0, 0, 255};
+
+    // draw rectangle:
+    bg.fillRect(300, 100, 50, 50, col2);
+    bg.drawRect(300, 100, 50, 50, col0);
+
+    // draw shaded triangle:
     bg.fillTriangle(50, 50, 150, 400, 400, 150, col3);
 
     // draw circle:

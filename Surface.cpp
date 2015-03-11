@@ -176,6 +176,26 @@ void Surface::fill(Uint32 color)
     fillRect(NULL, color);
 }
 
+void Surface::drawRect(int x, int y, int w, int h, SDL_Color color)
+{
+    SDL_Rect rect = {x, y, w, h};
+    drawRect(&rect, rawColor(color));
+}
+
+void Surface::drawRect(const SDL_Rect *rect, Uint32 color)
+{
+    fillRect(rect->x, rect->y, rect->w, 1, color);
+    fillRect(rect->x, rect->y, 1, rect->h, color);
+    fillRect(rect->x, rect->y + rect->h, rect->w, 1, color);
+    fillRect(rect->x + rect->w, rect->y, 1, rect->h, color);
+}
+
+void Surface::fillRect(int x, int y, int w, int h, SDL_Color color)
+{
+    SDL_Rect rect = {x, y, w, h};
+    fillRect(&rect, rawColor(color));
+}
+
 void Surface::fillRect(const SDL_Rect *rect, Uint32 color)
 {
     if(SDL_FillRect(surface, rect, color) != 0)
