@@ -12,7 +12,8 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
-SDL_Color text_color = {0,0,0};
+SDL_Color white {255, 255, 255, 255}, red = {255, 0, 0, 255}, green = {0, 255, 0, 255}, blue = {0, 0, 255, 255}, black = {0, 0, 0, 255};
+SDL_Color gray1 = {127, 127, 127, 255}, gray2 = {190, 190, 190, 255};
 
 class App : public System
 {
@@ -35,38 +36,34 @@ App::App()
         font("res/slkscr.ttf", 8),
         bg(640, 480),
         img("res/hello.png"),
-        text(font, "Hello, SDL world!", text_color),
+        text(font, "Hello, SDL world!", black),
         x1(0), y1(0), x2(0), y2(0)
 {
     // draw checkerboard:
-    Uint32 bgCol[] = {bg.rawColor(127, 127, 127), bg.rawColor(180, 180, 180)};
-    const int q = 16;
-    for(int y = 0; y < 480/q; y++)
-        for(int x = 0; x < 640/q; x++)
-            bg.fillRect(x * q, y * q, q, q, bgCol[(x % 2) ^ (y % 2)]);
+    Surface pattern(32, 32);
+    pattern.fill(gray1);
+    pattern.fillRect(0, 0, 16, 16, gray2);
+    pattern.fillRect(16, 16, 16, 16, gray2);
+    bg.fill(pattern);
 
     // draw radial lines:
     int cx = 320, cy = 240, r = 200;
-    SDL_Color line_color = {255, 0, 0};
     for(double a = 0; a < 6.283185307179586; a += 6.283185307179586/20.0)
-        bg.drawLine(cx, cy, (int)(cx + cos(a) * r), (int)(cy + sin(a) * r), line_color);
-
-    SDL_Color col0 = {0, 0, 0};
-    SDL_Color col1 = {255, 0, 0}, col2 = {0, 255, 0}, col3 = {0, 0, 255};
+        bg.drawLine(cx, cy, (int)(cx + cos(a) * r), (int)(cy + sin(a) * r), red);
 
     // draw rectangle:
-    bg.fillRect(300, 100, 50, 50, col2);
-    bg.drawRect(300, 100, 50, 50, col0);
+    bg.fillRect(300, 100, 50, 50, green);
+    bg.drawRect(300, 100, 50, 50, black);
 
     // draw triangle:
-    bg.fillTriangle(50, 50, 150, 400, 400, 150, col3);
-    bg.drawTriangle(50, 50, 150, 400, 400, 150, col0);
+    bg.fillTriangle(50, 50, 150, 400, 400, 150, blue);
+    bg.drawTriangle(50, 50, 150, 400, 400, 150, black);
 
     // draw circle:
-    bg.drawCircle(400, 210, 200, col2, 32);
+    bg.drawCircle(400, 210, 200, green, 32);
 
     // fill circle:
-    bg.fillCircle(400, 210, 50, col1, 32);
+    bg.fillCircle(400, 210, 50, red, 32);
 }
 
 App::~App()
