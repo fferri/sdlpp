@@ -3,15 +3,22 @@
 
 #include <string>
 #include <map>
-#include <vector>
 
 #include "Event.h"
 
 class PartModel
 {
-public:
+protected:
     std::string name;
-    std::map<int, std::vector<Event> > data;
+    std::string type;
+    std::multimap<TimeStamp, Event> data;
+
+public:
+    PartModel(std::string name, std::string type);
+    virtual ~PartModel();
+
+    void add(TimeStamp t, const Event& e);
+    std::string str() const;
 };
 
 #endif // PARTMODEL_H_INCLUDED
