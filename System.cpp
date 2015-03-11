@@ -48,6 +48,10 @@ void System::init()
         SDL_free(basePath_);
         LOG(TRACE) << "basePath is '" << basePath.c_str() << "'\n";
     }
+
+    SDL_EventState(SDL_QUIT, SDL_ENABLE);
+    SDL_EventState(SDL_WINDOWEVENT, SDL_ENABLE);
+    SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
 }
 
 void System::cleanup()
@@ -74,14 +78,28 @@ void System::dispatchEvent(const SDL_Event& event)
 {
     switch(event.type)
     {
-    case SDL_QUIT:
-        shutdown = true;
+    case SDL_DROPFILE:
+        onDropEvent(event.drop);
         break;
     case SDL_KEYUP:
-        onKeyUp(event);
-        break;
     case SDL_KEYDOWN:
-        onKeyDown(event);
+        onKeyboardEvent(event.key);
+        break;
+    case SDL_MOUSEMOTION:
+        onMouseMotionEvent(event.motion);
+        break;
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+        onMouseButtonEvent(event.button);
+        break;
+    case SDL_MOUSEWHEEL:
+        onMouseWheelEvent(event.wheel);
+        break;
+    case SDL_WINDOWEVENT:
+        onWindowEvent(event.window);
+        break;
+    case SDL_QUIT:
+        onQuitEvent(event.quit);
         break;
     }
 }
@@ -103,6 +121,7 @@ void System::run()
     {
         pollAndDispatchEvent();
         loop();
+        SDL_Delay(0);
     }
 }
 
@@ -111,12 +130,33 @@ long System::ticks()
     return SDL_GetTicks();
 }
 
-void System::onKeyUp(const SDL_Event& event)
+void System::onDropEvent(const SDL_DropEvent& event)
 {
 }
 
-void System::onKeyDown(const SDL_Event& event)
+void System::onKeyboardEvent(const SDL_KeyboardEvent& event)
 {
+}
+
+void System::onMouseMotionEvent(const SDL_MouseMotionEvent& event)
+{
+}
+
+void System::onMouseButtonEvent(const SDL_MouseButtonEvent& event)
+{
+}
+
+void System::onMouseWheelEvent(const SDL_MouseWheelEvent& event)
+{
+}
+
+void System::onWindowEvent(const SDL_WindowEvent& event)
+{
+}
+
+void System::onQuitEvent(const SDL_QuitEvent& event)
+{
+    requestShutdown();
 }
 
 void System::loop()

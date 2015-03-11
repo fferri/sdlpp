@@ -25,7 +25,11 @@ private:
 public:
     App();
     virtual ~App();
-    void onKeyUp(const SDL_Event& event);
+    void onKeyboardEvent(const SDL_KeyboardEvent& event);
+    void onMouseMotionEvent(const SDL_MouseMotionEvent& event);
+    void onMouseButtonEvent(const SDL_MouseButtonEvent& event);
+    void onMouseWheelEvent(const SDL_MouseWheelEvent& event);
+    void onWindowEvent(const SDL_WindowEvent& event);
     void loop();
     void draw();
 };
@@ -70,9 +74,11 @@ App::~App()
 {
 }
 
-void App::onKeyUp(const SDL_Event& event)
+void App::onKeyboardEvent(const SDL_KeyboardEvent& event)
 {
-    switch(event.key.keysym.sym)
+    if(event.type != SDL_KEYDOWN) return;
+
+    switch(event.keysym.sym)
     {
     case SDLK_ESCAPE:
         requestShutdown();
@@ -97,6 +103,44 @@ void App::onKeyUp(const SDL_Event& event)
         LOG(INFO) << "RAlt up\n";
         break;
     }
+}
+
+void App::onMouseMotionEvent(const SDL_MouseMotionEvent& event)
+{
+    LOG(INFO) << "MouseMotion: which=" << (int)event.which << ", state=" << (int)event.state << ", x=" << (int)event.x << ", y=" << (int)event.y << ", xrel=" << (int)event.xrel << ", yrel=" << (int)event.yrel << "\n";
+}
+
+void App::onMouseButtonEvent(const SDL_MouseButtonEvent& event)
+{
+    LOG(INFO) << "MouseButton: which=" << (int)event.which << ", button=" << (int)event.button << ", state=" << (int)event.state << ", clicks=" << (int)event.clicks << ", x=" << (int)event.x << ", y=" << (int)event.y << "\n";
+}
+
+void App::onMouseWheelEvent(const SDL_MouseWheelEvent& event)
+{
+    LOG(INFO) << "MouseWheel: which=" << (int)event.which << ", x=" << (int)event.x << ", y=" << (int)event.y << /* ", direction=" << event.direction << */ "\n";
+}
+
+void App::onWindowEvent(const SDL_WindowEvent& event)
+{
+    std::string eventName = "?";
+#define gkjhgk(x) case x: eventName = #x; break;
+    switch(event.event)
+    {
+    gkjhgk(SDL_WINDOWEVENT_SHOWN)
+    gkjhgk(SDL_WINDOWEVENT_HIDDEN)
+    gkjhgk(SDL_WINDOWEVENT_EXPOSED)
+    gkjhgk(SDL_WINDOWEVENT_MOVED)
+    gkjhgk(SDL_WINDOWEVENT_RESIZED)
+    gkjhgk(SDL_WINDOWEVENT_MINIMIZED)
+    gkjhgk(SDL_WINDOWEVENT_MAXIMIZED)
+    gkjhgk(SDL_WINDOWEVENT_RESTORED)
+    gkjhgk(SDL_WINDOWEVENT_ENTER)
+    gkjhgk(SDL_WINDOWEVENT_LEAVE)
+    gkjhgk(SDL_WINDOWEVENT_FOCUS_GAINED)
+    gkjhgk(SDL_WINDOWEVENT_FOCUS_LOST)
+    gkjhgk(SDL_WINDOWEVENT_CLOSE)
+    }
+    LOG(INFO) << "WindowEvent: " << eventName << ", windowID=" << (int)event.windowID << ", data1=" << (int)event.data1 << ", data2=" << (int)event.data2 << "\n";
 }
 
 void App::loop()

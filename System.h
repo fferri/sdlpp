@@ -26,8 +26,13 @@ public:
     long ticks();
     void clear();
 
-    virtual void onKeyUp(const SDL_Event& event);
-    virtual void onKeyDown(const SDL_Event& event);
+    virtual void onDropEvent(const SDL_DropEvent& event);
+    virtual void onKeyboardEvent(const SDL_KeyboardEvent& event);
+    virtual void onMouseMotionEvent(const SDL_MouseMotionEvent& event);
+    virtual void onMouseButtonEvent(const SDL_MouseButtonEvent& event);
+    virtual void onMouseWheelEvent(const SDL_MouseWheelEvent& event);
+    virtual void onWindowEvent(const SDL_WindowEvent& event);
+    virtual void onQuitEvent(const SDL_QuitEvent& event);
 
     virtual void loop();
 };
