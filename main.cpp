@@ -43,6 +43,27 @@ App::App()
         text(font, "Hello, SDL world!", black),
         x1(0), y1(0), x2(0), y2(0)
 {
+    LOG(INFO) << "begin testing RTree\n";
+    Control c[5];
+    c[0].z = 1;
+    c[0].rect = {1,4,9,1};
+    c[1].z = 2;
+    c[1].rect = {2,2,5,4};
+    c[2].z = 3;
+    c[2].rect = {3,3,5,5};
+    c[3].z = 4;
+    c[3].rect = {4,1,2,8};
+    c[4].z = 5;
+    c[4].rect = {9,6,3,3};
+    for(int i = 0; i < 5; i++) addControl(&c[i], c[i].rect);
+    removeControl(&c[1]);
+    std::vector<Control *> cr = controlsAt(5, 4.5);
+    for(std::vector<Control *>::iterator it = cr.begin(); it != cr.end(); ++it)
+    {
+        LOG(INFO) << (*it)->z << "\n";
+    }
+    LOG(INFO) << "finished testing RTree\n";
+
     // draw checkerboard:
     Surface pattern(32, 32);
     pattern.fill(gray1);

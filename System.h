@@ -2,10 +2,21 @@
 #define SYSTEM_H_INCLUDED
 
 #include <string>
+#include <vector>
+#include <map>
 
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+
+#include "RTree.h"
+
+class Control
+{
+public:
+    SDL_Rect rect;
+    int z;
+};
 
 class System
 {
@@ -13,6 +24,13 @@ protected:
     bool shutdown;
     bool verbose;
     std::string basePath;
+
+    RTree<Control *, float, 2> controlsRTree;
+    std::map<Control *, SDL_Rect> controlsRects;
+public:
+    void addControl(Control *control, SDL_Rect rect);
+    void removeControl(Control *control);
+    std::vector<Control *> controlsAt(float x, float y);
 
 public:
     System();
