@@ -15,14 +15,17 @@ struct EventDataMIDI
     unsigned char data2;
 };
 
+union EventDataPayload
+{
+    int i;
+    float f;
+    EventDataMIDI m;
+};
+
 struct EventData
 {
     char type;
-    union {
-        int i;
-        float f;
-        EventDataMIDI m;
-    } data;
+    EventDataPayload data;
 };
 
 class Event
@@ -45,6 +48,7 @@ public:
     void set(size_t index, int i);
     void set(size_t index, float f);
     void set(size_t index, EventDataMIDI m);
+    EventDataPayload get(size_t index) const;
     std::string str() const;
 };
 

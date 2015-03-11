@@ -83,6 +83,11 @@ void Event::set(size_t index, EventDataMIDI m)
     data[index].data.m = m;
 }
 
+EventDataPayload Event::get(size_t index) const
+{
+    return data[index].data;
+}
+
 std::string Event::str() const
 {
     std::stringstream ss;
