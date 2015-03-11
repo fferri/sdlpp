@@ -57,8 +57,9 @@ App::App()
     bg.fillRect(300, 100, 50, 50, col2);
     bg.drawRect(300, 100, 50, 50, col0);
 
-    // draw shaded triangle:
+    // draw triangle:
     bg.fillTriangle(50, 50, 150, 400, 400, 150, col3);
+    bg.drawTriangle(50, 50, 150, 400, 400, 150, col0);
 
     // draw circle:
     bg.drawCircle(400, 210, 200, col2, 32);
