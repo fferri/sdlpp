@@ -55,6 +55,31 @@ Surface::~Surface()
     SDL_FreeSurface(surface);
 }
 
+void Surface::resize(int newWidth, int newHeight, bool keepContents)
+{
+    SDL_Surface *new_surface = SDL_CreateRGBSurface(0, newWidth, newHeight, 32,
+        0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+
+    if(!new_surface)
+    {
+        LOG(FATAL) << "SDL_CreateRGBSurface: " << SDL_GetError() << "\n";
+        exit(1);
+    }
+
+    if(keepContents)
+    {
+        if(SDL_BlitSurface(surface, NULL, new_surface, NULL) != 0)
+        {
+            LOG(FATAL) << "SDL_BlitSurface: " << SDL_GetError() << "\n";
+            exit(1);
+        }
+    }
+
+    invalidateTexture();
+    SDL_FreeSurface(surface);
+    surface = new_surface;
+}
+
 unsigned long Surface::getVersion() const
 {
     return version;
@@ -185,6 +210,14 @@ void Surface::fill(SDL_Color color)
 void Surface::fill(Uint32 color)
 {
     fillRect(NULL, color);
+}
+
+void Surface::fill(const Surface& pattern)
+{
+    int w = pattern.getWidth(), h = pattern.getHeight();
+    for(int y = 0; y < getHeight(); y += h)
+        for(int x = 0; x < getWidth(); x += w)
+            blit(pattern, x, y);
 }
 
 void Surface::drawRect(int x, int y, int w, int h, SDL_Color color)

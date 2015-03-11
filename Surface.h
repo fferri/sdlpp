@@ -19,6 +19,7 @@ public:
     Surface(const char *imgFile);
     Surface(const Font& font, const char *text, SDL_Color color);
     virtual ~Surface();
+    void resize(int newWidth, int newHeight, bool keepContents);
     unsigned long getVersion() const;
     SDL_Texture * getTexture(const Window& window);
     void render(const Window& window, const SDL_Rect *srcRect, const SDL_Rect *dstRect);
@@ -38,6 +39,7 @@ public:
     Uint32 rawColor(SDL_Color color) const;
     void fill(SDL_Color color);
     void fill(Uint32 color);
+    void fill(const Surface& pattern);
     void drawRect(int x, int y, int w, int h, SDL_Color color);
     void drawRect(const SDL_Rect *rect, Uint32 color);
     void fillRect(int x, int y, int w, int h, SDL_Color color);
