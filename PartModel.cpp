@@ -22,7 +22,7 @@ std::string PartModel::str() const
     ss << "{";
 
     bool first = true;
-    for(std::map<TimeStamp, Event>::const_iterator it = data.begin(); it != data.end(); ++it)
+    for(EventMap::const_iterator it = data.begin(); it != data.end(); ++it)
     {
         if(first) first = false; else ss << ", ";
         ss << it->first << ": " << it->second.str();
@@ -31,5 +31,15 @@ std::string PartModel::str() const
     ss << "}";
 
     return ss.str();
+}
+
+EventMap::const_iterator PartModel::begin() const
+{
+    return data.begin();
+}
+
+EventMap::const_iterator PartModel::end() const
+{
+    return data.end();
 }
 

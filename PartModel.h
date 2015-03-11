@@ -6,12 +6,15 @@
 
 #include "Event.h"
 
+typedef std::multimap<TimeStamp, Event> EventMap;
+
 class PartModel
 {
 protected:
     std::string name;
     std::string type;
-    std::multimap<TimeStamp, Event> data;
+
+    EventMap data;
 
 public:
     PartModel(std::string name, std::string type);
@@ -19,6 +22,9 @@ public:
 
     void add(TimeStamp t, const Event& e);
     std::string str() const;
+
+    EventMap::const_iterator begin() const;
+    EventMap::const_iterator end() const;
 };
 
 #endif // PARTMODEL_H_INCLUDED
