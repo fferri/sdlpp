@@ -6,7 +6,8 @@ Surface::Surface(int width, int height)
     LOG(TRACE) << "Surface: empty constructor\n";
 
     version = 0L;
-    surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0x000000FF);
+    surface = SDL_CreateRGBSurface(0, width, height, 32,
+        0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
     texture = NULL;
 
     if(!surface)
@@ -166,9 +167,19 @@ Uint32 Surface::rawColor(Uint8 r, Uint8 g, Uint8 b) const
     return SDL_MapRGB(getPixelFormat(), r, g, b);
 }
 
+Uint32 Surface::rawColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a) const
+{
+    return SDL_MapRGBA(getPixelFormat(), r, g, b, a);
+}
+
 Uint32 Surface::rawColor(SDL_Color color) const
 {
-    return SDL_MapRGB(getPixelFormat(), color.r, color.g, color.b);
+    return SDL_MapRGBA(getPixelFormat(), color.r, color.g, color.b, color.a);
+}
+
+void Surface::fill(SDL_Color color)
+{
+    fillRect(NULL, rawColor(color));
 }
 
 void Surface::fill(Uint32 color)
