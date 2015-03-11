@@ -49,6 +49,8 @@ public:
     void drawText(const char *text, int x, int y, const Font& font, SDL_Color color);
     void drawLine(int x1, int y1, int x2, int y2, SDL_Color color);
     void drawLineNoLock(int x1, int y1, int x2, int y2, Uint32 color);
+    void drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, SDL_Color color);
+    void drawTriangleNoLock(int x1, int y1, int x2, int y2, int x3, int y3, Uint32 color);
     void fillTriangleNoLock(int x1, int y1, int x2, int y2, int x3, int y3, Uint32 color);
     void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, SDL_Color color);
     void drawCircleNoLock(int x, int y, int radius, Uint32 color, int resolution);

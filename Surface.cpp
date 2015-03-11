@@ -319,6 +319,32 @@ void Surface::drawLineNoLock(int x1, int y1, int x2, int y2, Uint32 color)
     }
 }
 
+void Surface::drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, SDL_Color color)
+{
+    if(SDL_MUSTLOCK(surface))
+    {
+        if(SDL_LockSurface(surface) != 0)
+        {
+            LOG(FATAL) << "SDL_LockSurface: " << SDL_GetError() << "\n";
+            exit(1);
+        }
+    }
+
+    drawTriangleNoLock(x1, y1, x2, y2, rawColor(color));
+
+    if(SDL_MUSTLOCK(surface))
+    {
+        SDL_UnlockSurface(surface);
+    }
+}
+
+void Surface::drawTriangleNoLock(int x1, int y1, int x2, int y2, int x3, int y3, Uint32 color)
+{
+    drawLineNoLock(x1, y1, x2, y2, color);
+    drawLineNoLock(x2, y2, x3, y3, color);
+    drawLineNoLock(x3, y3, x1, y1, color);
+}
+
 void Surface::fillTriangleNoLock(int x1, int y1, int x2, int y2, int x3, int y3, Uint32 color)
 {
     Uint32 *pixels = (Uint32 *)surface->pixels;
