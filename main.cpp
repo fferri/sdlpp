@@ -1,6 +1,7 @@
 #include "System.h"
 #include "Surface.h"
 #include "Logger.h"
+#include "PartView.h"
 
 #include <cmath>
 #include <string>
@@ -108,6 +109,8 @@ void App::loop()
     window.swapBuffer();
 }
 
+PartView *pview;
+
 void App::draw()
 {
     bg.render(window, 0, 0);
@@ -119,12 +122,22 @@ void App::draw()
     img.render(window, x1, y1, w1, h1);
 
     text.render(window, x2, y2);
+
+    pview->draw(window);
 }
 
 int main(int argc, char **argv)
 {
-    SET_LOG_LEVEL(TRACE);
-    LOG(INFO) << "started " << 0 << "\n";
+    SET_LOG_LEVEL(DEBUG);
+
+    PartModel part("part1", "fi");
+    Event e1; e1.add(60.01f); e1.add(127); part.add(0, e1);
+    Event e2; e2.add(63.25f); e2.add(120); part.add(3, e2);
+    Event e3; e3.add(63.25f); e3.add(120); part.add(0, e3);
+
+    PartView view(part);
+    pview = &view;
+
     App app;
     app.run();
 }
