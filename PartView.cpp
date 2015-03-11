@@ -19,6 +19,8 @@ PartView::PartView(const PartModel& model)
     x_max = 32;
     x_offset = 0;
 
+    rect = {30, 30, 400, 200};
+
     updateBackground();
     updateData();
     updateOutline();
@@ -35,29 +37,32 @@ void PartView::updateData()
 {
     data.fill(data_bg);
 
+    SDL_Rect n = {0, 0, 20, 1};
+
     for(EventMap::const_iterator it = model.begin(); it != model.end(); ++it)
     {
-        int x = it->first + x_offset;
-        if(x < x_min || x > x_max) continue;
-        int y = 0;
+        n.x = it->first + x_offset;
+        if(n.x < x_min || n.x > x_max) continue;
+        n.y = 0;
         switch(it->second.getType(0)) {
             case 'f':
-                y = (int)it->second.get(0).f;
+                n.y = (int)it->second.get(0).f;
                 break;
             case 'i':
-                y = it->second.get(0).i;
+                n.y = it->second.get(0).i;
                 break;
             default:
                 continue;
         }
-        y = data.getHeight() - (y + y_offset);
-        if(y < y_min || y > y_max) continue;
+        n.y = n.y + y_offset;
+        if(n.y < y_min || n.y > y_max) continue;
 
         // scale to screen
-        x = (x - x_min) * rect.w / (x_max - x_min);
-        y = (y - y_min) * rect.h / (y_max - y_min);
-
-        data.drawRect(x, y, 20, rect.h / (y_max - y_min), fg_lines);
+        n.x = (n.x - x_min) * rect.w / (x_max - x_min);
+        n.y = (n.y - y_min) * rect.h / (y_max - y_min);
+        n.h = rect.h / (y_max - y_min);
+        if(n.h < 1) n.h = 1;
+        data.drawRect(n.x, n.y, n.w, n.h, fg_lines);
     }
 }
 
@@ -75,6 +80,6 @@ void PartView::draw(const Window& window)
             s.blit(bg_tile, x, y);
     s.blit(data, 0, 0);
     s.blit(outline, 0, 0);
-    s.render(window, 10, 10);
+    s.render(window, rect.x, rect.y);
 }
 
