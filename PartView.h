@@ -8,12 +8,14 @@
 class PartView
 {
 private:
-    const int noteh;
     Surface bg_tile, data, outline;
     const PartModel& model;
     SDL_Rect rect;
     SDL_Color bg_color, bg_lines, fg_lines, data_bg, empty;
-    float zoomx;
+
+    float y_min, y_max, y_offset;
+    TimeStamp x_min, x_max, x_offset;
+
 public:
     PartView(const PartModel& model);
     void updateBackground();
