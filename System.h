@@ -22,7 +22,7 @@ public:
     virtual void init();
     virtual void cleanup();
     void requestShutdown();
-    void pollAndDispatchEvent();
+    void processPendingEvents();
     void dispatchEvent(const SDL_Event& event);
     void run();
     long ticks();

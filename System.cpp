@@ -104,10 +104,10 @@ void System::dispatchEvent(const SDL_Event& event)
     }
 }
 
-void System::pollAndDispatchEvent()
+void System::processPendingEvents()
 {
     SDL_Event event;
-    if(SDL_PollEvent(&event))
+    while(SDL_PollEvent(&event))
     {
         dispatchEvent(event);
     }
@@ -119,7 +119,7 @@ void System::run()
 
     while(!shutdown)
     {
-        pollAndDispatchEvent();
+        processPendingEvents();
         loop();
         SDL_Delay(0);
     }
