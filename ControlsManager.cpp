@@ -1,7 +1,13 @@
 #include "ControlsManager.h"
 #include "Logger.h"
 
-ControlsManager::ControlsManager()
+#include <utility>
+#include <cassert>
+
+ControlsManager::ControlsManager(Window& window)
+    : window(window),
+      focusedControl(NULL),
+      grabbingMouseControl(NULL)
 {
 }
 
@@ -13,9 +19,9 @@ bool ControlsManager::getMinMaxZ(int& minZ, int& maxZ) const
 {
     bool ret = false;
 
-    if(controlsZOrder.size() > 0)
+    if(controlsZ.size() > 0)
     {
-        for(std::map<Control *, int>::const_iterator it = controlsZOrder.begin(); it != controlsZOrder.end(); ++it)
+        for(std::map<Control *, int>::const_iterator it = controlsZ.begin(); it != controlsZ.end(); ++it)
         {
             if(ret)
             {
@@ -37,23 +43,19 @@ bool ControlsManager::getMinMaxZ(int& minZ, int& maxZ) const
 
 void ControlsManager::repackZ()
 {
-    std::map<int, Control *> inv;
-    for(std::map<Control *, int>::const_iterator it = controlsZOrder.begin(); it != controlsZOrder.end(); ++it)
+    std::multimap<int, Control *> controlsZInv;
+    for(std::map<Control *, int>::const_iterator it = controlsZ.begin(); it != controlsZ.end(); ++it)
     {
-        inv[it->second] = it->first;
+        controlsZInv.insert(std::make_pair(it->second, it->first));
     }
 
-    if(inv.size() != controlsZOrder.size())
-    {
-        LOG(ERROR) << "ControlsManager: cannot repack controlsZOrder (duplicate Zs?)\n";
-        return;
-    }
+    assert(controlsZInv.size() == controlsZ.size());
 
-    controlsZOrder.clear();
     int z = 0;
-    for(std::map<int, Control *>::const_iterator it = inv.begin(); it != inv.end(); ++it)
+    controlsZ.clear();
+    for(std::multimap<int, Control *>::const_iterator it = controlsZInv.begin(); it != controlsZInv.end(); ++it)
     {
-        controlsZOrder[it->second] = ++z;
+        controlsZ[it->second] = ++z;
     }
 }
 
@@ -75,7 +77,7 @@ void ControlsManager::add(Control *control, SDL_Rect rect, int z)
     float a_max[2] = {float(rect.x + rect.w), float(rect.y + rect.h)};
     controlsRTree.Insert(a_min, a_max, control);
     controlsRects[control] = rect;
-    controlsZOrder[control] = z;
+    controlsZ.insert(std::make_pair(control, z));
 }
 
 void ControlsManager::remove(Control *control)
@@ -85,6 +87,7 @@ void ControlsManager::remove(Control *control)
     float a_max[2] = {float(rect.x + rect.w), float(rect.y + rect.h)};
     controlsRTree.Remove(a_min, a_max, control);
     controlsRects.erase(control);
+    controlsZ.erase(control);
 }
 
 bool cb(Control *control, void *data)
@@ -102,13 +105,16 @@ Control * ControlsManager::at(int x, int y)
     if(v.size() == 1) return v[0];
     if(v.size() < 1) return NULL;
     Control *ret = v[0];
-    int z = controlsZOrder[ret];
+    int maxZ = controlsZ[ret];
     for(std::vector<Control *>::iterator it = v.begin(); it != v.end(); ++it)
     {
-        if(controlsZOrder[*it] > z)
+        Control *c = *it;
+        int z = controlsZ[c];
+
+        if(z > maxZ)
         {
-            ret = *it;
-            z = controlsZOrder[ret];
+            ret = c;
+            maxZ = z;
         }
     }
     return ret;
@@ -118,7 +124,7 @@ void ControlsManager::bringToFront(Control *control)
 {
     int minZ = 1, maxZ = 1;
     getMinMaxZ(minZ, maxZ);
-    controlsZOrder[control] = maxZ + 1;
+    controlsZ[control] = maxZ + 1;
     repackZ(); // TODO: call this once in a while instead of every time
 }
 
@@ -126,25 +132,58 @@ void ControlsManager::sendToBack(Control *control)
 {
     int minZ = 1, maxZ = 1;
     getMinMaxZ(minZ, maxZ);
-    controlsZOrder[control] = minZ - 1;
+    controlsZ[control] = minZ - 1;
     repackZ(); // TODO: call this once in a while instead of every time
 }
 
 void ControlsManager::move(Control *control, SDL_Rect rect)
 {
-    int z = controlsZOrder[control];
+    int z = controlsZ[control];
     remove(control);
     add(control, rect, z);
 }
 
-SDL_Rect ControlsManager::getRect(Control *control) const
+SDL_Rect ControlsManager::getRect(Control *control)
 {
     return controlsRects.at(control);
 }
 
-int ControlsManager::getZ(Control *control) const
+int ControlsManager::getZ(Control *control)
 {
-    return controlsZOrder.at(control);
+    return controlsZ.at(control);
+}
+
+void ControlsManager::render()
+{
+    std::multimap<int, Control *> controlsZInv;
+    for(std::map<Control *, int>::const_iterator it = controlsZ.begin(); it != controlsZ.end(); ++it)
+    {
+        controlsZInv.insert(std::make_pair(it->second, it->first));
+    }
+    for(std::multimap<int, Control *>::const_iterator it = controlsZInv.begin(); it != controlsZInv.end(); ++it)
+    {
+        Control *control = it->second;
+        SDL_Rect& r = controlsRects[control];
+        // XXX: don't recreate surface every time!
+        Surface s(r.w, r.h);
+        paintControl(control, s);
+        s.render(window, r.x, r.y);
+    }
+}
+
+void ControlsManager::paintControl(Control *control, Surface& s) const
+{
+    control->paint(s);
+}
+
+bool ControlsManager::needsRepaint() const
+{
+    for(std::map<Control *, int>::const_iterator it = controlsZ.begin(); it != controlsZ.end(); ++it)
+    {
+        if(it->first->needsRepaint())
+            return true;
+    }
+    return false;
 }
 
 void ControlsManager::onKeyboardEvent(const SDL_KeyboardEvent& event)
@@ -155,22 +194,44 @@ void ControlsManager::onKeyboardEvent(const SDL_KeyboardEvent& event)
 
 void ControlsManager::onMouseMotionEvent(const SDL_MouseMotionEvent& event)
 {
-    Control *control = at(event.x, event.y);
+    Control *control = grabbingMouseControl ? grabbingMouseControl : at(event.x, event.y);
     if(control)
         control->onMouseMotionEvent(event);
 }
 
 void ControlsManager::onMouseButtonEvent(const SDL_MouseButtonEvent& event)
 {
-    Control *control = at(event.x, event.y);
+    Control *control = grabbingMouseControl ? grabbingMouseControl : at(event.x, event.y);
     if(control)
         control->onMouseButtonEvent(event);
 }
 
 void ControlsManager::onMouseWheelEvent(const SDL_MouseWheelEvent& event)
 {
-    Control *control = at(event.x, event.y);
+    Control *control = grabbingMouseControl ? grabbingMouseControl : at(event.x, event.y);
     if(control)
         control->onMouseWheelEvent(event);
+}
+
+void ControlsManager::grabMouse(Control *control)
+{
+    if(grabbingMouseControl && grabbingMouseControl != control)
+    {
+        LOG(ERROR) << "ControlsManager::grabMouse(): already grabbed by another control\n";
+        return;
+    }
+    grabbingMouseControl = control;
+    window.grabMouse();
+}
+
+void ControlsManager::releaseMouse(Control *control)
+{
+    if(grabbingMouseControl != control)
+    {
+        LOG(ERROR) << "ControlsManager::releaseMouse(): not grabbed by the releasing control\n";
+        return;
+    }
+    grabbingMouseControl = NULL;
+    window.releaseMouse();
 }
 
