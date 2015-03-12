@@ -52,6 +52,9 @@ public:
 
     void grabMouse(Control *control);
     void releaseMouse(Control *control);
+
+    bool hasFocus(Control *control);
+    void setFocus(Control *control);
 };
 
 #endif // CONTROLSMANAGER_H_INCLUDED

@@ -53,6 +53,14 @@ void Scrollbar::paint(Surface& s)
         s.fillRect(p, 0, sz, r.h, fg);
     else
         s.fillRect(0, p, r.w, sz, fg);
+
+    if(hasFocus())
+        s.drawRect(2, 2, r.w - 4, r.h - 4, bg);
+}
+
+bool Scrollbar::acceptsKeyboardFocus() const
+{
+    return true;
 }
 
 void Scrollbar::setContentSize(int sz)

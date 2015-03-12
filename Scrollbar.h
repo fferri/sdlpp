@@ -26,6 +26,8 @@ public:
 
     void paint(Surface& s);
 
+    bool acceptsKeyboardFocus() const;
+
     void setContentSize(int sz);
     void setPos(double p);
 

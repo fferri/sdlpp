@@ -67,3 +67,8 @@ void Control::releaseMouse()
     controlsManager.releaseMouse(this);
 }
 
+bool Control::hasFocus()
+{
+    return controlsManager.hasFocus(this);
+}
+

@@ -188,6 +188,26 @@ bool ControlsManager::needsRepaint() const
 
 void ControlsManager::onKeyboardEvent(const SDL_KeyboardEvent& event)
 {
+    if(event.type == SDL_KEYDOWN && event.keysym.sym == SDLK_TAB)
+    {
+        // cycle through controls that accept keyboard focus
+        std::map<Control *, int>::iterator it = focusedControl ? controlsZ.find(focusedControl) : controlsZ.begin();;
+        ++it;
+        Control *newFocusedControl = NULL;
+        for(int i = 0; i < 2; i++)
+        {
+            while(newFocusedControl == NULL && it != controlsZ.end())
+            {
+                if(it->first->acceptsKeyboardFocus())
+                    newFocusedControl = it->first;
+                ++it;
+            }
+            it = controlsZ.begin();
+        }
+        setFocus(newFocusedControl);
+        return;
+    }
+
     if(focusedControl)
         focusedControl->onKeyboardEvent(event);
 }
@@ -233,5 +253,23 @@ void ControlsManager::releaseMouse(Control *control)
     }
     grabbingMouseControl = NULL;
     window.releaseMouse();
+}
+
+bool ControlsManager::hasFocus(Control *control)
+{
+    return control == focusedControl;
+}
+
+void ControlsManager::setFocus(Control *control)
+{
+    if(control == focusedControl) return;
+
+    Control *oldFocusedControl = focusedControl;
+    focusedControl = control;
+
+    if(oldFocusedControl)
+        oldFocusedControl->repaint();
+    if(focusedControl)
+        focusedControl->repaint();
 }
 

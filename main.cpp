@@ -25,7 +25,7 @@ private:
     int x1, y1, w1, h1, x2, y2;
     Font font;
     Surface bg, img, text;
-    Scrollbar scrollbar;
+    Scrollbar scrollbar, scroll2;
 public:
     App();
     virtual ~App();
@@ -46,11 +46,15 @@ App::App()
         img("res/hello.png"),
         text(font, "Hello, SDL world!", black),
         x1(0), y1(0), x2(0), y2(0),
-        scrollbar(cm)
+        scrollbar(cm), scroll2(cm)
 {
     SDL_Rect scrollbarRect = {20, 20, 20, 200};
     cm.add(&scrollbar, scrollbarRect);
     scrollbar.setContentSize(300);
+
+    SDL_Rect scroll2Rect = {60, 20, 20, 200};
+    cm.add(&scroll2, scroll2Rect);
+    scroll2.setContentSize(600);
 
     // draw checkerboard:
     Surface pattern(32, 32);

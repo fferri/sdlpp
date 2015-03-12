@@ -33,6 +33,8 @@ public:
     
     void grabMouse();
     void releaseMouse();
+
+    bool hasFocus();
 };
 
 #endif // CONTROL_H_INCLUDED
