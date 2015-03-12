@@ -3,6 +3,7 @@
 #include "Logger.h"
 #include "PartView.h"
 #include "ControlsManager.h"
+#include "Scrollbar.h"
 
 #include <cmath>
 #include <string>
