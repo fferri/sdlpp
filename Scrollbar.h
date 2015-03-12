@@ -9,7 +9,7 @@
 class Scrollbar : public Control
 {
 protected:
-    SDL_Color bg, fg;
+    SDL_Color bg, fg, fo;
 
     int contentSize;
     double pos;
@@ -31,8 +31,9 @@ public:
     void setContentSize(int sz);
     void setPos(double p);
 
-    void onMouseMotionEvent(const SDL_MouseMotionEvent& event);
-    void onMouseButtonEvent(const SDL_MouseButtonEvent& event);
+    void onMouseMotionEvent(SDL_MouseMotionEvent& event);
+    void onMouseButtonEvent(SDL_MouseButtonEvent& event);
+    void onKeyboardEvent(SDL_KeyboardEvent& event);
 };
 
 #endif // SCROLLBAR_H_INCLUDED

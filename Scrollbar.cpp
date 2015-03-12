@@ -6,6 +6,7 @@ Scrollbar::Scrollbar(ControlsManager& cm)
 {
     bg = {30, 40, 0, 255};
     fg = {30, 140, 200, 255};
+    fo = {230, 240, 240, 255};
     contentSize = 0;
     pos = 0.0;
     mouseDown = false;
@@ -55,7 +56,7 @@ void Scrollbar::paint(Surface& s)
         s.fillRect(0, p, r.w, sz, fg);
 
     if(hasFocus())
-        s.drawRect(2, 2, r.w - 4, r.h - 4, bg);
+        s.drawRect(2, 2, r.w - 4, r.h - 4, fo);
 }
 
 bool Scrollbar::acceptsKeyboardFocus() const
@@ -78,14 +79,14 @@ void Scrollbar::setPos(double p)
     repaint();
 }
 
-void Scrollbar::onMouseMotionEvent(const SDL_MouseMotionEvent& event)
+void Scrollbar::onMouseMotionEvent(SDL_MouseMotionEvent& event)
 {
     if(!mouseDown) return;
     double incr = 1.0 / double(getLongSize() - getHandleSize());
     setPos(pos + (isHorizontal() ? event.xrel : event.yrel) * incr);
 }
 
-void Scrollbar::onMouseButtonEvent(const SDL_MouseButtonEvent& event)
+void Scrollbar::onMouseButtonEvent(SDL_MouseButtonEvent& event)
 {
     if(event.type == SDL_MOUSEBUTTONDOWN && event.button == 1)
     {
@@ -96,6 +97,23 @@ void Scrollbar::onMouseButtonEvent(const SDL_MouseButtonEvent& event)
     {
         mouseDown = false;
         releaseMouse();
+    }
+}
+
+void Scrollbar::onKeyboardEvent(SDL_KeyboardEvent& event)
+{
+    LOG(INFO) << "scrollbar key event\n";
+    if(event.type == SDL_KEYDOWN)
+    {
+        switch(event.keysym.sym)
+        {
+        case SDLK_UP:
+            setPos(pos - 0.1);
+            break;
+        case SDLK_DOWN:
+            setPos(pos + 0.1);
+            break;
+        }
     }
 }
 
