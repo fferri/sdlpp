@@ -74,7 +74,7 @@ void System::requestShutdown()
     shutdown = true;
 }
 
-void System::dispatchEvent(const SDL_Event& event)
+void System::dispatchEvent(SDL_Event& event)
 {
     switch(event.type)
     {
@@ -130,31 +130,31 @@ long System::ticks()
     return SDL_GetTicks();
 }
 
-void System::onDropEvent(const SDL_DropEvent& event)
+void System::onDropEvent(SDL_DropEvent& event)
 {
 }
 
-void System::onKeyboardEvent(const SDL_KeyboardEvent& event)
+void System::onKeyboardEvent(SDL_KeyboardEvent& event)
 {
 }
 
-void System::onMouseMotionEvent(const SDL_MouseMotionEvent& event)
+void System::onMouseMotionEvent(SDL_MouseMotionEvent& event)
 {
 }
 
-void System::onMouseButtonEvent(const SDL_MouseButtonEvent& event)
+void System::onMouseButtonEvent(SDL_MouseButtonEvent& event)
 {
 }
 
-void System::onMouseWheelEvent(const SDL_MouseWheelEvent& event)
+void System::onMouseWheelEvent(SDL_MouseWheelEvent& event)
 {
 }
 
-void System::onWindowEvent(const SDL_WindowEvent& event)
+void System::onWindowEvent(SDL_WindowEvent& event)
 {
 }
 
-void System::onQuitEvent(const SDL_QuitEvent& event)
+void System::onQuitEvent(SDL_QuitEvent& event)
 {
     requestShutdown();
 }

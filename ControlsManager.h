@@ -45,10 +45,10 @@ public:
 
     virtual bool needsRepaint() const;
 
-    virtual void onKeyboardEvent(const SDL_KeyboardEvent& event);
-    virtual void onMouseMotionEvent(const SDL_MouseMotionEvent& event);
-    virtual void onMouseButtonEvent(const SDL_MouseButtonEvent& event);
-    virtual void onMouseWheelEvent(const SDL_MouseWheelEvent& event);
+    virtual void onKeyboardEvent(SDL_KeyboardEvent& event);
+    virtual void onMouseMotionEvent(SDL_MouseMotionEvent& event);
+    virtual void onMouseButtonEvent(SDL_MouseButtonEvent& event);
+    virtual void onMouseWheelEvent(SDL_MouseWheelEvent& event);
 
     void grabMouse(Control *control);
     void releaseMouse(Control *control);

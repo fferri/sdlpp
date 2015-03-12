@@ -186,7 +186,7 @@ bool ControlsManager::needsRepaint() const
     return false;
 }
 
-void ControlsManager::onKeyboardEvent(const SDL_KeyboardEvent& event)
+void ControlsManager::onKeyboardEvent(SDL_KeyboardEvent& event)
 {
     if(event.type == SDL_KEYDOWN && event.keysym.sym == SDLK_TAB)
     {
@@ -212,25 +212,37 @@ void ControlsManager::onKeyboardEvent(const SDL_KeyboardEvent& event)
         focusedControl->onKeyboardEvent(event);
 }
 
-void ControlsManager::onMouseMotionEvent(const SDL_MouseMotionEvent& event)
+void ControlsManager::onMouseMotionEvent(SDL_MouseMotionEvent& event)
 {
     Control *control = grabbingMouseControl ? grabbingMouseControl : at(event.x, event.y);
     if(control)
+    {
+        event.x -= controlsRects[control].x;
+        event.y -= controlsRects[control].y;
         control->onMouseMotionEvent(event);
+    }
 }
 
-void ControlsManager::onMouseButtonEvent(const SDL_MouseButtonEvent& event)
+void ControlsManager::onMouseButtonEvent(SDL_MouseButtonEvent& event)
 {
     Control *control = grabbingMouseControl ? grabbingMouseControl : at(event.x, event.y);
     if(control)
+    {
+        event.x -= controlsRects[control].x;
+        event.y -= controlsRects[control].y;
         control->onMouseButtonEvent(event);
+    }
 }
 
-void ControlsManager::onMouseWheelEvent(const SDL_MouseWheelEvent& event)
+void ControlsManager::onMouseWheelEvent(SDL_MouseWheelEvent& event)
 {
     Control *control = grabbingMouseControl ? grabbingMouseControl : at(event.x, event.y);
     if(control)
+    {
+        event.x -= controlsRects[control].x;
+        event.y -= controlsRects[control].y;
         control->onMouseWheelEvent(event);
+    }
 }
 
 void ControlsManager::grabMouse(Control *control)

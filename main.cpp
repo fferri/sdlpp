@@ -29,11 +29,11 @@ private:
 public:
     App();
     virtual ~App();
-    void onKeyboardEvent(const SDL_KeyboardEvent& event);
-    void onMouseMotionEvent(const SDL_MouseMotionEvent& event);
-    void onMouseButtonEvent(const SDL_MouseButtonEvent& event);
-    void onMouseWheelEvent(const SDL_MouseWheelEvent& event);
-    void onWindowEvent(const SDL_WindowEvent& event);
+    void onKeyboardEvent(SDL_KeyboardEvent& event);
+    void onMouseMotionEvent(SDL_MouseMotionEvent& event);
+    void onMouseButtonEvent(SDL_MouseButtonEvent& event);
+    void onMouseWheelEvent(SDL_MouseWheelEvent& event);
+    void onWindowEvent(SDL_WindowEvent& event);
     void loop();
 };
 
@@ -87,8 +87,10 @@ App::~App()
 {
 }
 
-void App::onKeyboardEvent(const SDL_KeyboardEvent& event)
+void App::onKeyboardEvent(SDL_KeyboardEvent& event)
 {
+    cm.onKeyboardEvent(event);
+
     if(event.type != SDL_KEYDOWN) return;
 
     switch(event.keysym.sym)
@@ -116,29 +118,24 @@ void App::onKeyboardEvent(const SDL_KeyboardEvent& event)
         LOG(INFO) << "RAlt up\n";
         break;
     }
-
-    cm.onKeyboardEvent(event);
 }
 
-void App::onMouseMotionEvent(const SDL_MouseMotionEvent& event)
+void App::onMouseMotionEvent(SDL_MouseMotionEvent& event)
 {
-    //LOG(INFO) << "MouseMotion: which=" << (int)event.which << ", state=" << (int)event.state << ", x=" << (int)event.x << ", y=" << (int)event.y << ", xrel=" << (int)event.xrel << ", yrel=" << (int)event.yrel << "\n";
     cm.onMouseMotionEvent(event);
 }
 
-void App::onMouseButtonEvent(const SDL_MouseButtonEvent& event)
+void App::onMouseButtonEvent(SDL_MouseButtonEvent& event)
 {
-    //LOG(INFO) << "MouseButton: which=" << (int)event.which << ", button=" << (int)event.button << ", state=" << (int)event.state << ", clicks=" << (int)event.clicks << ", x=" << (int)event.x << ", y=" << (int)event.y << "\n";
     cm.onMouseButtonEvent(event);
 }
 
-void App::onMouseWheelEvent(const SDL_MouseWheelEvent& event)
+void App::onMouseWheelEvent(SDL_MouseWheelEvent& event)
 {
-    //LOG(INFO) << "MouseWheel: which=" << (int)event.which << ", x=" << (int)event.x << ", y=" << (int)event.y << /* ", direction=" << event.direction << */ "\n";
     cm.onMouseWheelEvent(event);
 }
 
-void App::onWindowEvent(const SDL_WindowEvent& event)
+void App::onWindowEvent(SDL_WindowEvent& event)
 {
     std::string eventName = "?";
 #define gkjhgk(x) case x: eventName = #x; break;
