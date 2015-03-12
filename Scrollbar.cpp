@@ -75,7 +75,6 @@ void Scrollbar::setPos(double p)
     if(p > 1.0) pos = 1.0;
     else if(p < 0.0) pos = 0.0;
     else pos = p;
-    LOG(DEBUG) << "Scrollbar: pos=" << pos << "\n";
     repaint();
 }
 
@@ -102,7 +101,6 @@ void Scrollbar::onMouseButtonEvent(SDL_MouseButtonEvent& event)
 
 void Scrollbar::onKeyboardEvent(SDL_KeyboardEvent& event)
 {
-    LOG(INFO) << "scrollbar key event\n";
     if(event.type == SDL_KEYDOWN)
     {
         switch(event.keysym.sym)
