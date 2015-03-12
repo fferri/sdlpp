@@ -34,6 +34,8 @@ public:
     void clearClipRect();
     SDL_Rect getClipRect() const;
     SDL_PixelFormat * getPixelFormat() const;
+    void lock();
+    void unlock();
     Uint32 rawColor(Uint8 r, Uint8 g, Uint8 b) const;
     Uint32 rawColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a) const;
     Uint32 rawColor(SDL_Color color) const;

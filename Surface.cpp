@@ -187,6 +187,26 @@ SDL_PixelFormat * Surface::getPixelFormat() const
     return surface->format;
 }
 
+void Surface::lock()
+{
+    if(SDL_MUSTLOCK(surface))
+    {
+        if(SDL_LockSurface(surface) != 0)
+        {
+            LOG(FATAL) << "SDL_LockSurface: " << SDL_GetError() << "\n";
+            exit(1);
+        }
+    }
+}
+
+void Surface::unlock()
+{
+    if(SDL_MUSTLOCK(surface))
+    {
+        SDL_UnlockSurface(surface);
+    }
+}
+
 Uint32 Surface::rawColor(Uint8 r, Uint8 g, Uint8 b) const
 {
     return SDL_MapRGB(getPixelFormat(), r, g, b);
@@ -305,29 +325,11 @@ void Surface::drawText(const char *text, int x, int y, const Font& font, SDL_Col
     blit(s, x, y);
 }
 
-#define SDL_LOCK_SURFACE(surface) \
-    if(SDL_MUSTLOCK(surface)) \
-    { \
-        if(SDL_LockSurface(surface) != 0) \
-        { \
-            LOG(FATAL) << "SDL_LockSurface: " << SDL_GetError() << "\n"; \
-            exit(1); \
-        } \
-    }
-#define SDL_UNLOCK_SURFACE(surface) \
-    if(SDL_MUSTLOCK(surface)) \
-    { \
-        SDL_UnlockSurface(surface); \
-    }
-#define WRAP_IN_SDL_LOCK(surface, x) \
-    SDL_LOCK_SURFACE(surface); \
-    x; \
-    SDL_UNLOCK_SURFACE(surface);
-
-
 void Surface::drawLine(int x1, int y1, int x2, int y2, SDL_Color color)
 {
-    WRAP_IN_SDL_LOCK(surface, drawLineNoLock(x1, y1, x2, y2, rawColor(color)));
+    lock();
+    drawLineNoLock(x1, y1, x2, y2, rawColor(color));
+    unlock();
 }
 
 void Surface::drawLineNoLock(int x1, int y1, int x2, int y2, Uint32 color)
@@ -371,7 +373,9 @@ void Surface::drawLineNoLock(int x1, int y1, int x2, int y2, Uint32 color)
 
 void Surface::drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, SDL_Color color)
 {
-    WRAP_IN_SDL_LOCK(surface, drawTriangleNoLock(x1, y1, x2, y2, x3, y3, rawColor(color)));
+    lock();
+    drawTriangleNoLock(x1, y1, x2, y2, x3, y3, rawColor(color));
+    unlock();
 }
 
 void Surface::drawTriangleNoLock(int x1, int y1, int x2, int y2, int x3, int y3, Uint32 color)
@@ -406,7 +410,9 @@ void Surface::fillTriangleNoLock(int x1, int y1, int x2, int y2, int x3, int y3,
 
 void Surface::fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, SDL_Color color)
 {
-    WRAP_IN_SDL_LOCK(surface, fillTriangleNoLock(x1, y1, x2, y2, x3, y3, rawColor(color)));
+    lock();
+    fillTriangleNoLock(x1, y1, x2, y2, x3, y3, rawColor(color));
+    unlock();
 }
 
 void Surface::drawCircleNoLock(int x, int y, int radius, Uint32 color, int resolution)
@@ -425,7 +431,9 @@ void Surface::drawCircleNoLock(int x, int y, int radius, Uint32 color, int resol
 
 void Surface::drawCircle(int x, int y, int radius, SDL_Color color, int resolution)
 {
-    WRAP_IN_SDL_LOCK(surface, drawCircleNoLock(x, y, radius, rawColor(color), resolution));
+    lock();
+    drawCircleNoLock(x, y, radius, rawColor(color), resolution);
+    unlock();
 }
 
 void Surface::fillCircleNoLock(int x, int y, int radius, Uint32 color, int resolution)
@@ -445,6 +453,8 @@ void Surface::fillCircleNoLock(int x, int y, int radius, Uint32 color, int resol
 
 void Surface::fillCircle(int x, int y, int radius, SDL_Color color, int resolution)
 {
-    WRAP_IN_SDL_LOCK(surface, fillCircleNoLock(x, y, radius, rawColor(color), resolution));
+    lock();
+    fillCircleNoLock(x, y, radius, rawColor(color), resolution);
+    unlock();
 }
 
