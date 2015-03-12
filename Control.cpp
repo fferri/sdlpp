@@ -31,19 +31,19 @@ void Control::paint(Surface& s)
     repaintNeeded = false;
 }
 
-void Control::onKeyboardEvent(const SDL_KeyboardEvent& event)
+void Control::onKeyboardEvent(SDL_KeyboardEvent& event)
 {
 }
 
-void Control::onMouseMotionEvent(const SDL_MouseMotionEvent& event)
+void Control::onMouseMotionEvent(SDL_MouseMotionEvent& event)
 {
 }
 
-void Control::onMouseButtonEvent(const SDL_MouseButtonEvent& event)
+void Control::onMouseButtonEvent(SDL_MouseButtonEvent& event)
 {
 }
 
-void Control::onMouseWheelEvent(const SDL_MouseWheelEvent& event)
+void Control::onMouseWheelEvent(SDL_MouseWheelEvent& event)
 {
 }
 
