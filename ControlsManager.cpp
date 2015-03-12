@@ -191,8 +191,8 @@ void ControlsManager::onKeyboardEvent(SDL_KeyboardEvent& event)
     if(event.type == SDL_KEYDOWN && event.keysym.sym == SDLK_TAB)
     {
         // cycle through controls that accept keyboard focus
-        std::map<Control *, int>::iterator it = focusedControl ? controlsZ.find(focusedControl) : controlsZ.begin();;
-        ++it;
+        std::map<Control *, int>::iterator it = focusedControl ? controlsZ.find(focusedControl) : controlsZ.begin();
+        if(focusedControl && it != controlsZ.end()) ++it;
         Control *newFocusedControl = NULL;
         for(int i = 0; i < 2; i++)
         {
