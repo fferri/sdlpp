@@ -24,6 +24,7 @@ private:
     int x1, y1, w1, h1, x2, y2;
     Font font;
     Surface bg, img, text;
+    Scrollbar scrollbar;
 public:
     App();
     virtual ~App();
@@ -33,36 +34,22 @@ public:
     void onMouseWheelEvent(const SDL_MouseWheelEvent& event);
     void onWindowEvent(const SDL_WindowEvent& event);
     void loop();
-    void draw();
 };
 
 App::App()
     :
         window("Hello, SDL world!", 640, 480),
+        cm(window),
         font("res/slkscr.ttf", 8),
         bg(640, 480),
         img("res/hello.png"),
         text(font, "Hello, SDL world!", black),
-        x1(0), y1(0), x2(0), y2(0)
+        x1(0), y1(0), x2(0), y2(0),
+        scrollbar(cm)
 {
-    LOG(INFO) << "begin testing RTree\n";
-    Control c[5]; int z[5]; SDL_Rect crect[5];
-    z[0] = 1;
-    crect[0] = {1,4,9,1};
-    z[1] = 2;
-    crect[1] = {2,2,5,4};
-    z[2] = 3;
-    crect[2] = {3,3,5,5};
-    z[3] = 4;
-    crect[3] = {4,1,2,8};
-    z[4] = 5;
-    crect[4] = {9,6,3,3};
-    for(int i = 0; i < 5; i++) cm.add(&c[i], crect[i], z[i]);
-    cm.remove(&c[1]);
-    Control *cr = cm.at(5, 4);
-    if(cr) LOG(INFO) << " control z at(5,4) = " << cm.getZ(cr) << "\n";
-    else LOG(INFO) << " no control found at 5,4\n";
-    LOG(INFO) << "finished testing RTree\n";
+    SDL_Rect scrollbarRect = {20, 20, 20, 200};
+    cm.add(&scrollbar, scrollbarRect);
+    scrollbar.setContentSize(300);
 
     // draw checkerboard:
     Surface pattern(32, 32);
@@ -124,21 +111,26 @@ void App::onKeyboardEvent(const SDL_KeyboardEvent& event)
         LOG(INFO) << "RAlt up\n";
         break;
     }
+
+    cm.onKeyboardEvent(event);
 }
 
 void App::onMouseMotionEvent(const SDL_MouseMotionEvent& event)
 {
-    LOG(INFO) << "MouseMotion: which=" << (int)event.which << ", state=" << (int)event.state << ", x=" << (int)event.x << ", y=" << (int)event.y << ", xrel=" << (int)event.xrel << ", yrel=" << (int)event.yrel << "\n";
+    //LOG(INFO) << "MouseMotion: which=" << (int)event.which << ", state=" << (int)event.state << ", x=" << (int)event.x << ", y=" << (int)event.y << ", xrel=" << (int)event.xrel << ", yrel=" << (int)event.yrel << "\n";
+    cm.onMouseMotionEvent(event);
 }
 
 void App::onMouseButtonEvent(const SDL_MouseButtonEvent& event)
 {
-    LOG(INFO) << "MouseButton: which=" << (int)event.which << ", button=" << (int)event.button << ", state=" << (int)event.state << ", clicks=" << (int)event.clicks << ", x=" << (int)event.x << ", y=" << (int)event.y << "\n";
+    //LOG(INFO) << "MouseButton: which=" << (int)event.which << ", button=" << (int)event.button << ", state=" << (int)event.state << ", clicks=" << (int)event.clicks << ", x=" << (int)event.x << ", y=" << (int)event.y << "\n";
+    cm.onMouseButtonEvent(event);
 }
 
 void App::onMouseWheelEvent(const SDL_MouseWheelEvent& event)
 {
-    LOG(INFO) << "MouseWheel: which=" << (int)event.which << ", x=" << (int)event.x << ", y=" << (int)event.y << /* ", direction=" << event.direction << */ "\n";
+    //LOG(INFO) << "MouseWheel: which=" << (int)event.which << ", x=" << (int)event.x << ", y=" << (int)event.y << /* ", direction=" << event.direction << */ "\n";
+    cm.onMouseWheelEvent(event);
 }
 
 void App::onWindowEvent(const SDL_WindowEvent& event)
@@ -161,20 +153,14 @@ void App::onWindowEvent(const SDL_WindowEvent& event)
     gkjhgk(SDL_WINDOWEVENT_FOCUS_LOST)
     gkjhgk(SDL_WINDOWEVENT_CLOSE)
     }
-    LOG(INFO) << "WindowEvent: " << eventName << ", windowID=" << (int)event.windowID << ", data1=" << (int)event.data1 << ", data2=" << (int)event.data2 << "\n";
-}
-
-void App::loop()
-{
-    window.clear();
-    draw();
-    window.swapBuffer();
+    //LOG(INFO) << "WindowEvent: " << eventName << ", windowID=" << (int)event.windowID << ", data1=" << (int)event.data1 << ", data2=" << (int)event.data2 << "\n";
 }
 
 PartView *pview;
 
-void App::draw()
+void App::loop()
 {
+#if 0
     bg.render(window, 0, 0);
 
     x1 = 40 + sin(ticks() * 0.0018) * 40;
@@ -186,6 +172,14 @@ void App::draw()
     text.render(window, x2, y2);
 
     pview->draw(window);
+#endif
+    if(cm.needsRepaint())
+    {
+        LOG(DEBUG) << "paint!\n";
+        window.clear();
+        cm.render();
+        window.swapBuffer();
+    }
 }
 
 int main(int argc, char **argv)
