@@ -19,6 +19,8 @@ public:
     SDL_Renderer * getRenderer() const;
     void clear();
     void swapBuffer();
+    void grabMouse();
+    void releaseMouse();
 };
 
 #endif // WINDOW_H_INCLUDED

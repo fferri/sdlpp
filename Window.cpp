@@ -61,3 +61,13 @@ void Window::swapBuffer()
     SDL_RenderPresent(renderer);
 }
 
+void Window::grabMouse()
+{
+    SDL_SetWindowGrab(window, SDL_TRUE);
+}
+
+void Window::releaseMouse()
+{
+    SDL_SetWindowGrab(window, SDL_FALSE);
+}
+
