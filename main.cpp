@@ -177,7 +177,6 @@ void App::loop()
 #endif
     if(cm.needsRepaint())
     {
-        LOG(DEBUG) << "paint!\n";
         window.clear();
         cm.render();
         window.swapBuffer();
