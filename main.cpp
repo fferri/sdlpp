@@ -2,6 +2,7 @@
 #include "Surface.h"
 #include "Logger.h"
 #include "PartView.h"
+#include "ControlsManager.h"
 
 #include <cmath>
 #include <string>
@@ -19,6 +20,7 @@ class App : public System
 {
 private:
     Window window;
+    ControlsManager cm;
     int x1, y1, w1, h1, x2, y2;
     Font font;
     Surface bg, img, text;
@@ -44,24 +46,22 @@ App::App()
         x1(0), y1(0), x2(0), y2(0)
 {
     LOG(INFO) << "begin testing RTree\n";
-    Control c[5];
-    c[0].z = 1;
-    c[0].rect = {1,4,9,1};
-    c[1].z = 2;
-    c[1].rect = {2,2,5,4};
-    c[2].z = 3;
-    c[2].rect = {3,3,5,5};
-    c[3].z = 4;
-    c[3].rect = {4,1,2,8};
-    c[4].z = 5;
-    c[4].rect = {9,6,3,3};
-    for(int i = 0; i < 5; i++) addControl(&c[i], c[i].rect);
-    removeControl(&c[1]);
-    std::vector<Control *> cr = controlsAt(5, 4.5);
-    for(std::vector<Control *>::iterator it = cr.begin(); it != cr.end(); ++it)
-    {
-        LOG(INFO) << (*it)->z << "\n";
-    }
+    Control c[5]; int z[5]; SDL_Rect crect[5];
+    z[0] = 1;
+    crect[0] = {1,4,9,1};
+    z[1] = 2;
+    crect[1] = {2,2,5,4};
+    z[2] = 3;
+    crect[2] = {3,3,5,5};
+    z[3] = 4;
+    crect[3] = {4,1,2,8};
+    z[4] = 5;
+    crect[4] = {9,6,3,3};
+    for(int i = 0; i < 5; i++) cm.add(&c[i], crect[i], z[i]);
+    cm.remove(&c[1]);
+    Control *cr = cm.at(5, 4);
+    if(cr) LOG(INFO) << " control z at(5,4) = " << cm.getZ(cr) << "\n";
+    else LOG(INFO) << " no control found at 5,4\n";
     LOG(INFO) << "finished testing RTree\n";
 
     // draw checkerboard:

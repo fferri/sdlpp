@@ -163,35 +163,3 @@ void System::loop()
 {
 }
 
-void System::addControl(Control *control, SDL_Rect rect)
-{
-    float a_min[2] = {float(rect.x), float(rect.y)};
-    float a_max[2] = {float(rect.x + rect.w), float(rect.y + rect.h)};
-    controlsRTree.Insert(a_min, a_max, control);
-    controlsRects[control] = rect;
-}
-
-void System::removeControl(Control *control)
-{
-    SDL_Rect& rect = controlsRects[control];
-    float a_min[2] = {float(rect.x), float(rect.y)};
-    float a_max[2] = {float(rect.x + rect.w), float(rect.y + rect.h)};
-    controlsRTree.Remove(a_min, a_max, control);
-    controlsRects.erase(control);
-}
-
-bool cb(Control *control, void *data)
-{
-    std::vector<Control *> *pvector = (std::vector<Control *> *)data;;
-    pvector->push_back(control);
-    return true;
-}
-
-std::vector<Control *> System::controlsAt(float x, float y)
-{
-    std::vector<Control *> v;
-    float p[2] = {x, y};
-    controlsRTree.Search(p, p, cb, &v);
-    return v;
-}
-
