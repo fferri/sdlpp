@@ -248,10 +248,12 @@ void Surface::drawRect(int x, int y, int w, int h, SDL_Color color)
 
 void Surface::drawRect(const SDL_Rect *rect, Uint32 color)
 {
-    fillRect(rect->x, rect->y, rect->w, 1, color);
-    fillRect(rect->x, rect->y, 1, rect->h, color);
-    fillRect(rect->x, rect->y + rect->h, rect->w, 1, color);
-    fillRect(rect->x + rect->w, rect->y, 1, rect->h, color);
+    lock();
+    drawLineNoLock(rect->x, rect->y, rect->x + rect->w, rect->y, color);
+    drawLineNoLock(rect->x + rect->w, rect->y, rect->x + rect->w, rect->y + rect->h, color);
+    drawLineNoLock(rect->x, rect->y, rect->x, rect->y + rect->h, color);
+    drawLineNoLock(rect->x, rect->y + rect->h, rect->x + rect->w, rect->y + rect->h, color);
+    unlock();
 }
 
 void Surface::fillRect(int x, int y, int w, int h, SDL_Color color)
@@ -351,8 +353,7 @@ void Surface::drawLineNoLock(int x1, int y1, int x2, int y2, Uint32 color)
     float err = dx / 2.0f;
     const int ystep = (y1 < y2) ? 1 : -1;
     int y = y1;
-    const int maxX = x2;
-    for(int x = x1; x < maxX; x++)
+    for(int x = x1; x <= x2; x++)
     {
         if(steep)
         {
