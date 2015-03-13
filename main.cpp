@@ -14,11 +14,9 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
-class App : public System
+class MainWindow : public Window
 {
 private:
-    Window window;
-    
     Scrollbar scrollh, scrollv;
     SDL_Rect scrollhRect, scrollvRect;
     
@@ -29,19 +27,32 @@ private:
     
     Viewport viewport;
     SDL_Rect viewportRect;
+
 public:
-    App();
-    virtual ~App();
+    MainWindow();
+    virtual ~MainWindow();
+
+    void draw();
+
     void onKeyboardEvent(SDL_KeyboardEvent& event);
     void onMouseMotionEvent(SDL_MouseMotionEvent& event);
     void onMouseButtonEvent(SDL_MouseButtonEvent& event);
     void onMouseWheelEvent(SDL_MouseWheelEvent& event);
     void onWindowEvent(SDL_WindowEvent& event);
-    void loop();
 };
 
-App::App()
-    : window("Hello, SDL world!", 640, 480),
+class Application : public System
+{
+private:
+    MainWindow window;
+public:
+    void loop() { window.draw(); }
+};
+
+Application *application;
+
+MainWindow::MainWindow()
+    : Window("Hello, SDL world!", 640, 480),
       root({0, 0, 640, 480}),
       scrollh({0, 460, 620, 20}),
       scrollv({620, 0, 20, 460}),
@@ -59,11 +70,20 @@ App::App()
     scrollv.setCallback(boost::bind(&Viewport::setY, &viewport, _1));
 }
 
-App::~App()
+MainWindow::~MainWindow()
 {
 }
 
-void App::onKeyboardEvent(SDL_KeyboardEvent& event)
+void MainWindow::draw()
+{
+    if(root.shouldRedraw()) {
+        clear();
+        root.render(*this);
+        swapBuffer();
+    }
+}
+
+void MainWindow::onKeyboardEvent(SDL_KeyboardEvent& event)
 {
     root.onKeyboardEvent(event);
 
@@ -72,28 +92,28 @@ void App::onKeyboardEvent(SDL_KeyboardEvent& event)
         switch(event.keysym.sym)
         {
         case SDLK_ESCAPE:
-            requestShutdown();
+            application->requestShutdown();
             break;
         }
     }
 }
 
-void App::onMouseMotionEvent(SDL_MouseMotionEvent& event)
+void MainWindow::onMouseMotionEvent(SDL_MouseMotionEvent& event)
 {
     root.onMouseMotionEvent(event);
 }
 
-void App::onMouseButtonEvent(SDL_MouseButtonEvent& event)
+void MainWindow::onMouseButtonEvent(SDL_MouseButtonEvent& event)
 {
     root.onMouseButtonEvent(event);
 }
 
-void App::onMouseWheelEvent(SDL_MouseWheelEvent& event)
+void MainWindow::onMouseWheelEvent(SDL_MouseWheelEvent& event)
 {
     root.onMouseWheelEvent(event);
 }
 
-void App::onWindowEvent(SDL_WindowEvent& event)
+void MainWindow::onWindowEvent(SDL_WindowEvent& event)
 {
     std::string eventName = "?";
 #define gkjhgk(x) case x: eventName = #x; break;
@@ -116,20 +136,12 @@ void App::onWindowEvent(SDL_WindowEvent& event)
     //LOG(INFO) << "WindowEvent: " << eventName << ", windowID=" << (int)event.windowID << ", data1=" << (int)event.data1 << ", data2=" << (int)event.data2 << "\n";
 }
 
-void App::loop()
-{
-    if(root.shouldRedraw()) {
-        window.clear();
-        root.render(window);
-        window.swapBuffer();
-    }
-}
-
 int main(int argc, char **argv)
 {
     SET_LOG_LEVEL(DEBUG);
 
-    App app;
-    app.run();
+    Application a;
+    application = &a;
+    a.run();
 }
 

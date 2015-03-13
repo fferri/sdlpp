@@ -11,6 +11,14 @@ Window::Window(const char *title, int w, int h)
     createAll(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h);
 }
 
+Window::~Window()
+{
+}
+
+void Window::draw()
+{
+}
+
 void Window::createAll(const char *title, int x, int y, int w, int h)
 {
     createWindow(title, x, y, w, h);
@@ -26,6 +34,8 @@ void Window::createWindow(const char *title, int x, int y, int w, int h)
         LOG(FATAL) << "SDL_CreateWindow: " << SDL_GetError() << "\n";
         exit(1);
     }
+
+    SDL_SetWindowData(window, "Window*", this);
 }
 
 void Window::createRenderer()
@@ -71,3 +81,31 @@ void Window::releaseMouse()
     SDL_SetWindowGrab(window, SDL_FALSE);
 }
 
+void Window::onKeyboardEvent(SDL_KeyboardEvent& event)
+{
+}
+
+void Window::onMouseMotionEvent(SDL_MouseMotionEvent& event)
+{
+}
+
+void Window::onMouseButtonEvent(SDL_MouseButtonEvent& event)
+{
+}
+
+void Window::onMouseWheelEvent(SDL_MouseWheelEvent& event)
+{
+}
+
+void Window::onWindowEvent(SDL_WindowEvent& event)
+{
+}
+
+Window * Window::fromID(Uint32 windowID)
+{
+    SDL_Window *win = SDL_GetWindowFromID(windowID);
+
+    if(!win) return NULL;
+
+    return reinterpret_cast<Window *>(SDL_GetWindowData(win, "Window*"));
+}

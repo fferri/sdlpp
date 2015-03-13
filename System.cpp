@@ -1,4 +1,5 @@
 #include "System.h"
+#include "Window.h"
 #include "Logger.h"
 
 System::System()
@@ -136,22 +137,37 @@ void System::onDropEvent(SDL_DropEvent& event)
 
 void System::onKeyboardEvent(SDL_KeyboardEvent& event)
 {
+    Window *win = Window::fromID(event.windowID);
+    if(win)
+        win->onKeyboardEvent(event);
 }
 
 void System::onMouseMotionEvent(SDL_MouseMotionEvent& event)
 {
+    Window *win = Window::fromID(event.windowID);
+    if(win)
+        win->onMouseMotionEvent(event);
 }
 
 void System::onMouseButtonEvent(SDL_MouseButtonEvent& event)
 {
+    Window *win = Window::fromID(event.windowID);
+    if(win)
+        win->onMouseButtonEvent(event);
 }
 
 void System::onMouseWheelEvent(SDL_MouseWheelEvent& event)
 {
+    Window *win = Window::fromID(event.windowID);
+    if(win)
+        win->onMouseWheelEvent(event);
 }
 
 void System::onWindowEvent(SDL_WindowEvent& event)
 {
+    Window *win = Window::fromID(event.windowID);
+    if(win)
+        win->onWindowEvent(event);
 }
 
 void System::onQuitEvent(SDL_QuitEvent& event)
