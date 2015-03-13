@@ -19,10 +19,11 @@ protected:
 
     boost::function<void(void)> callback;
 
-    Font *font;
+    const Font& font;
+    Surface surfText;
 
 public:
-    Button(SDL_Rect rect, std::string text, Font *font);
+    Button(SDL_Rect rect, std::string text, const Font& font);
     virtual ~Button();
 
     void paint();

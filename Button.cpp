@@ -1,13 +1,14 @@
 #include "Button.h"
 #include "Logger.h"
 
-Button::Button(SDL_Rect rect, std::string text, Font *font)
-    : Control(rect)
+Button::Button(SDL_Rect rect, std::string text, const Font& font)
+    : Control(rect),
+      bg({30, 40, 0, 255}),
+      fg({30, 140, 200, 255}),
+      fo({230, 240, 240, 255}),
+      font(font),
+      surfText(font, text.c_str(), fo)
 {
-    bg = {30, 40, 0, 255};
-    fg = {30, 140, 200, 255};
-    fo = {230, 240, 240, 255};
-
     mouseDown = false;
     mouseHover = false;
 
@@ -25,6 +26,8 @@ void Button::paint()
     canvas.fill(bg);
 
     canvas.fillRect(0, 0, r.w, r.h, fg);
+
+    canvas.blit(surfText, (mouseDown ? 1 : 0) + r.w / 2 - surfText.getWidth() / 2, (mouseDown ? 1 : 0) + r.h / 2 - surfText.getHeight() / 2);
 
     if(mouseHover)
         canvas.drawRect(0, 0, r.w, r.h, fo);
@@ -49,6 +52,8 @@ void Button::onMouseButtonEvent(SDL_MouseButtonEvent& event)
         mouseDown = true;
         grabMouse();
         if(window) window->grabMouse();
+        paint();
+        redraw();
     }
     if(event.type == SDL_MOUSEBUTTONUP && event.button == 1)
     {
@@ -58,6 +63,8 @@ void Button::onMouseButtonEvent(SDL_MouseButtonEvent& event)
         SDL_Rect ar = getAbsoluteRect();
         if(callback && event.x >= ar.x && event.y >= ar.y && event.x < (ar.x + ar.w) && event.y < (ar.y + ar.h))
             callback();
+        paint();
+        redraw();
     }
 }
 

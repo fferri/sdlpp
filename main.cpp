@@ -55,11 +55,9 @@ MainWindow::MainWindow()
       scrollh({0, 460, 620, 20}),
       scrollv({620, 0, 20, 460}),
       dummy({0, 0, 1000, 1000}),
-      button({40, 40, 100, 30}, "Click me", &font),
+      button({40, 40, 100, 30}, "Click me", font),
       viewport({0, 0, 620, 460}, dummy)
 {
-    button.setZIndex(100);
-
     root.addChild(&scrollh);
     root.addChild(&scrollv);
     root.addChild(&viewport);
