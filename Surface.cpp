@@ -252,10 +252,11 @@ void Surface::drawRect(int x, int y, int w, int h, SDL_Color color)
 void Surface::drawRect(const SDL_Rect *rect, Uint32 color)
 {
     lock();
-    drawLineNoLock(rect->x, rect->y, rect->x + rect->w, rect->y, color);
-    drawLineNoLock(rect->x + rect->w, rect->y, rect->x + rect->w, rect->y + rect->h, color);
-    drawLineNoLock(rect->x, rect->y, rect->x, rect->y + rect->h, color);
-    drawLineNoLock(rect->x, rect->y + rect->h, rect->x + rect->w, rect->y + rect->h, color);
+    int x1 = rect->x, y1 = rect->y, x2 = x1 + rect->w - 1, y2 = y1 + rect->h - 1;
+    drawLineNoLock(x1, y1, x2, y1, color);
+    drawLineNoLock(x1, y1, x1, y2, color);
+    drawLineNoLock(x1, y2, x2, y2, color);
+    drawLineNoLock(x2, y1, x2, y2, color);
     unlock();
 }
 
