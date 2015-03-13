@@ -3,7 +3,6 @@
 
 Control::Control(SDL_Rect rect)
     : rect(rect),
-      zIndex(1),
       parent(NULL),
       grabbingMouseControl(NULL),
       underMouseControl(NULL),
@@ -16,11 +15,6 @@ Control::~Control()
 {
 }
 
-bool Control::operator<(const Control& rhs) const
-{
-    return zIndex < rhs.zIndex;
-}
-
 void Control::addChild(Control *control)
 {
     if(!control)
@@ -29,7 +23,7 @@ void Control::addChild(Control *control)
         return;
     }
 
-    children.insert(control);
+    children.push_back(control);
 
     if(control->parent)
     {
@@ -49,7 +43,10 @@ void Control::removeChild(Control *control)
         return;
     }
 
-    children.erase(control);
+    for(Controls::iterator it = children.begin(); it != children.end(); )
+    {
+        if(*it == control) it = children.erase(it);
+    }
 
     if(control->parent != this)
     {
@@ -71,7 +68,7 @@ Control * Control::childAt(int x, int y)
     }
     x -= rect.x;
     y -= rect.y;
-    for(std::set<Control *>::reverse_iterator it = children.rbegin(); it != children.rend(); ++it)
+    for(Controls::reverse_iterator it = children.rbegin(); it != children.rend(); ++it)
     {
         Control *c = *it;
         const SDL_Rect& r = c->getRect();
@@ -222,7 +219,7 @@ bool Control::shouldRedraw()
 {
     if(needsRedraw) return true;
 
-    for(std::set<Control *>::iterator it = children.begin(); it != children.end(); ++it)
+    for(Controls::iterator it = children.begin(); it != children.end(); ++it)
     {
         if((*it)->shouldRedraw()) return true;
     }
@@ -251,20 +248,9 @@ void Control::render(const Window& window)
 
 void Control::renderChildren(const Window& window)
 {
-    for(std::set<Control *>::iterator it = children.begin(); it != children.end(); ++it)
+    for(Controls::iterator it = children.begin(); it != children.end(); ++it)
     {
         (*it)->render(window);
     }
-}
-
-int Control::getZIndex()
-{
-    return zIndex;
-}
-
-void Control::setZIndex(int z)
-{
-    zIndex = z;
-    redraw();
 }
 

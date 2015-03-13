@@ -3,21 +3,23 @@
 
 #include <SDL.h>
 
-#include <set>
+#include <vector>
 
 #include "Surface.h"
 #include "Window.h"
 
+class Control;
 class ControlsManager;
+
+typedef std::vector<Control *> Controls;
 
 class Control
 {
 private:
     SDL_Rect rect;
-    int zIndex;
 
     Control *parent;
-    std::set<Control *> children;
+    Controls children;
 
     Control *grabbingMouseControl;
     Control *underMouseControl;
@@ -30,8 +32,6 @@ protected:
 public:
     Control(SDL_Rect rect);
     virtual ~Control();
-
-    bool operator<(const Control& rhs) const;
 
     void addChild(Control *control);
     void removeChild(Control *control);
@@ -62,9 +62,6 @@ public:
 
     virtual void render(const Window& window);
     virtual void renderChildren(const Window& window);
-
-    int getZIndex();
-    void setZIndex(int z);
 };
 
 #endif // CONTROL_H_INCLUDED
