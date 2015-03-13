@@ -6,6 +6,7 @@ Control::Control(SDL_Rect rect)
       zIndex(1),
       parent(NULL),
       grabbingMouseControl(NULL),
+      underMouseControl(NULL),
       canvas(rect.w, rect.h),
       needsRedraw(true)
 {
