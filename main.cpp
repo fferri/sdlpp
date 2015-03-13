@@ -4,6 +4,7 @@
 #include "Scrollbar.h"
 #include "Viewport.h"
 #include "DummyControl.h"
+#include "Button.h"
 
 #include <cmath>
 #include <string>
@@ -17,16 +18,12 @@
 class MainWindow : public Window
 {
 private:
+    Font font;
     Scrollbar scrollh, scrollv;
-    SDL_Rect scrollhRect, scrollvRect;
-    
     Control root;
-
+    Button button;
     DummyControl dummy;
-    SDL_Rect dummyRect;
-    
     Viewport viewport;
-    SDL_Rect viewportRect;
 
 public:
     MainWindow();
@@ -53,15 +50,20 @@ Application *application;
 
 MainWindow::MainWindow()
     : Window("Hello, SDL world!", 640, 480),
+      font("res/slkscr.ttf", 8),
       root({0, 0, 640, 480}),
       scrollh({0, 460, 620, 20}),
       scrollv({620, 0, 20, 460}),
       dummy({0, 0, 1000, 1000}),
+      button({40, 40, 100, 30}, "Click me", &font),
       viewport({0, 0, 620, 460}, dummy)
 {
+    button.setZIndex(100);
+
     root.addChild(&scrollh);
     root.addChild(&scrollv);
     root.addChild(&viewport);
+    root.addChild(&button);
 
     scrollh.setContentSize(dummy.getRect().w);
     scrollv.setContentSize(dummy.getRect().h);
@@ -85,6 +87,8 @@ void MainWindow::draw()
 
 void MainWindow::onKeyboardEvent(SDL_KeyboardEvent& event)
 {
+    Window::onKeyboardEvent(event);
+
     root.onKeyboardEvent(event);
 
     if(event.type == SDL_KEYDOWN)
@@ -100,21 +104,29 @@ void MainWindow::onKeyboardEvent(SDL_KeyboardEvent& event)
 
 void MainWindow::onMouseMotionEvent(SDL_MouseMotionEvent& event)
 {
+    Window::onMouseMotionEvent(event);
+
     root.onMouseMotionEvent(event);
 }
 
 void MainWindow::onMouseButtonEvent(SDL_MouseButtonEvent& event)
 {
+    Window::onMouseButtonEvent(event);
+
     root.onMouseButtonEvent(event);
 }
 
 void MainWindow::onMouseWheelEvent(SDL_MouseWheelEvent& event)
 {
+    Window::onMouseWheelEvent(event);
+
     root.onMouseWheelEvent(event);
 }
 
 void MainWindow::onWindowEvent(SDL_WindowEvent& event)
 {
+    Window::onWindowEvent(event);
+
     switch(event.event)
     {
     case SDL_WINDOWEVENT_SHOWN:
