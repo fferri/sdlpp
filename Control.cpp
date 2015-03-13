@@ -23,11 +23,21 @@ void Control::addChild(Control *control)
         return;
     }
 
+    for(Controls::iterator it = children.begin(); it != children.end(); ++it)
+    {
+        if(*it == control)
+        {
+            LOG(WARN) << "Control::addChild(" << control << "): already added\n";
+            return;
+        }
+    }
+
     children.push_back(control);
+    redraw();
 
     if(control->parent)
     {
-        LOG(WARN) << "Control::addChild: control has already another parent\n";
+        LOG(WARN) << "Control::addChild(" << control << "): control has already another parent (" << control->parent << ")\n";
     }
     else
     {
@@ -45,12 +55,20 @@ void Control::removeChild(Control *control)
 
     for(Controls::iterator it = children.begin(); it != children.end(); )
     {
-        if(*it == control) it = children.erase(it);
+        if(*it == control)
+        {
+            it = children.erase(it);
+            redraw();
+        }
+        else
+        {
+            ++it;
+        }
     }
 
     if(control->parent != this)
     {
-        LOG(WARN) << "Control::removeChild: control has another parent\n";
+        LOG(WARN) << "Control::removeChild(" << control << "): control has another parent (" << control->parent << ")\n";
     }
     else
     {
@@ -73,8 +91,12 @@ Control * Control::childAt(int x, int y)
         Control *c = *it;
         const SDL_Rect& r = c->getRect();
         if(x >= r.x && y >= r.y && x < (r.x + r.w) && y < (r.y + r.h))
+        {
+            LOG(TRACE) << "Control::childAt(" << x << ", " << y << ") found " << c << "\n";
             return c;
+        }
     }
+
     return NULL;
 }
 
