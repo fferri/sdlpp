@@ -177,6 +177,17 @@ void Control::onMouseWheelEvent(SDL_MouseWheelEvent& event)
 
 void Control::onWindowEvent(SDL_WindowEvent& event)
 {
+    if(underMouseControl && event.event == SDL_WINDOWEVENT_LEAVE)
+    {
+        SDL_WindowEvent leave;
+        leave.type = SDL_WINDOWEVENT;
+        leave.timestamp = event.timestamp;
+        leave.windowID = event.windowID;
+        leave.event = SDL_WINDOWEVENT_LEAVE;
+        underMouseControl->onWindowEvent(leave);
+
+        underMouseControl = NULL;
+    }
 }
 
 void Control::setRect(SDL_Rect newRect)
