@@ -93,15 +93,19 @@ void Scrollbar::onMouseMotionEvent(SDL_MouseMotionEvent& event)
 
 void Scrollbar::onMouseButtonEvent(SDL_MouseButtonEvent& event)
 {
+    Window *window = Window::fromID(event.windowID);
+
     if(event.type == SDL_MOUSEBUTTONDOWN && event.button == 1)
     {
         mouseDown = true;
         grabMouse();
+        if(window) window->grabMouse();
     }
     if(event.type == SDL_MOUSEBUTTONUP && event.button == 1)
     {
         mouseDown = false;
         releaseMouse();
+        if(window) window->releaseMouse();
     }
 }
 
