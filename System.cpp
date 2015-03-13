@@ -94,9 +94,14 @@ void System::dispatchEvent(SDL_Event& event)
 void System::processPendingEvents()
 {
     SDL_Event event;
-    while(SDL_PollEvent(&event))
+    if(SDL_WaitEvent(&event))
     {
         dispatchEvent(event);
+    }
+    else
+    {
+        LOG(ERROR) << "System::run(): SDL_WaitEvent: " << SDL_GetError() << "\n";
+        SDL_Delay(80);
     }
 }
 
@@ -104,9 +109,8 @@ void System::run()
 {
     while(!shutdown)
     {
-        processPendingEvents();
         loop();
-        SDL_Delay(0);
+        processPendingEvents();
     }
 }
 
