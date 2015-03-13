@@ -20,6 +20,7 @@ private:
     std::set<Control *> children;
 
     Control *grabbingMouseControl;
+    Control *underMouseControl;
 
     bool needsRedraw;
 
@@ -47,6 +48,7 @@ public:
     virtual void onMouseMotionEvent(SDL_MouseMotionEvent& event);
     virtual void onMouseButtonEvent(SDL_MouseButtonEvent& event);
     virtual void onMouseWheelEvent(SDL_MouseWheelEvent& event);
+    virtual void onWindowEvent(SDL_WindowEvent& event);
 
     void setRect(SDL_Rect newRect);
     const SDL_Rect& getRect();

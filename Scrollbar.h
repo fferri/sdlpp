@@ -16,6 +16,7 @@ protected:
     int contentSize;
     double pos;
     bool mouseDown;
+    bool mouseHover;
 
     int getHandleSize();
     int getHandlePos();
@@ -40,6 +41,7 @@ public:
     void onMouseMotionEvent(SDL_MouseMotionEvent& event);
     void onMouseButtonEvent(SDL_MouseButtonEvent& event);
     void onKeyboardEvent(SDL_KeyboardEvent& event);
+    void onWindowEvent(SDL_WindowEvent& event);
 };
 
 #endif // SCROLLBAR_H_INCLUDED

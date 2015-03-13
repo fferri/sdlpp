@@ -10,6 +10,7 @@ Scrollbar::Scrollbar(SDL_Rect rect)
     contentSize = 0;
     pos = 0.0;
     mouseDown = false;
+    mouseHover = false;
 
     paint();
 }
@@ -50,10 +51,12 @@ void Scrollbar::paint()
 
     int p = getHandlePos(), sz = getHandleSize();
 
-    if(isHorizontal())
-        canvas.fillRect(p, 0, sz, r.h, fg);
-    else
-        canvas.fillRect(0, p, r.w, sz, fg);
+    bool h = isHorizontal();
+    SDL_Rect hr = {h ? p : 0, h ? 0 : p, h ? sz : r.w, h ? r.h : sz};
+    canvas.fillRect(hr.x, hr.y, hr.w, hr.h, fg);
+
+    if(mouseHover)
+        canvas.drawRect(hr.x, hr.y, hr.w, hr.h, fo);
 }
 
 bool Scrollbar::acceptsKeyboardFocus() const
@@ -115,6 +118,23 @@ void Scrollbar::onKeyboardEvent(SDL_KeyboardEvent& event)
             setPos(pos + 0.1);
             break;
         }
+    }
+}
+
+void Scrollbar::onWindowEvent(SDL_WindowEvent& event)
+{
+    switch(event.event)
+    {
+    case SDL_WINDOWEVENT_ENTER:
+        mouseHover = true;
+        paint();
+        redraw();
+        break;
+    case SDL_WINDOWEVENT_LEAVE:
+        mouseHover = false;
+        paint();
+        redraw();
+        break;
     }
 }
 

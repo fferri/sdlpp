@@ -129,7 +129,36 @@ void Control::onKeyboardEvent(SDL_KeyboardEvent& event)
 
 void Control::onMouseMotionEvent(SDL_MouseMotionEvent& event)
 {
-    Control *c = grabbingMouseControl ? grabbingMouseControl : childAt(event.x, event.y);
+    if(grabbingMouseControl)
+    {
+        grabbingMouseControl->onMouseMotionEvent(event);
+        return;
+    }
+    Control *c = childAt(event.x, event.y);
+    if(c != underMouseControl)
+    {
+        if(underMouseControl)
+        {
+            SDL_WindowEvent leave;
+            leave.type = SDL_WINDOWEVENT;
+            leave.timestamp = event.timestamp;
+            leave.windowID = event.windowID;
+            leave.event = SDL_WINDOWEVENT_LEAVE;
+            underMouseControl->onWindowEvent(leave);
+        }
+
+        if(c)
+        {
+            SDL_WindowEvent enter;
+            enter.type = SDL_WINDOWEVENT;
+            enter.timestamp = event.timestamp;
+            enter.windowID = event.windowID;
+            enter.event = SDL_WINDOWEVENT_ENTER;
+            c->onWindowEvent(enter);
+        }
+
+        underMouseControl = c;
+    }
     if(c) c->onMouseMotionEvent(event);
 }
 
@@ -143,6 +172,10 @@ void Control::onMouseWheelEvent(SDL_MouseWheelEvent& event)
 {
     Control *c = grabbingMouseControl ? grabbingMouseControl : childAt(event.x, event.y);
     if(c) c->onMouseWheelEvent(event);
+}
+
+void Control::onWindowEvent(SDL_WindowEvent& event)
+{
 }
 
 void Control::setRect(SDL_Rect newRect)

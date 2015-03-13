@@ -115,23 +115,24 @@ void MainWindow::onMouseWheelEvent(SDL_MouseWheelEvent& event)
 
 void MainWindow::onWindowEvent(SDL_WindowEvent& event)
 {
-    std::string eventName = "?";
-#define gkjhgk(x) case x: eventName = #x; break;
     switch(event.event)
     {
-    gkjhgk(SDL_WINDOWEVENT_SHOWN)
-    gkjhgk(SDL_WINDOWEVENT_HIDDEN)
-    gkjhgk(SDL_WINDOWEVENT_EXPOSED)
-    gkjhgk(SDL_WINDOWEVENT_MOVED)
-    gkjhgk(SDL_WINDOWEVENT_RESIZED)
-    gkjhgk(SDL_WINDOWEVENT_MINIMIZED)
-    gkjhgk(SDL_WINDOWEVENT_MAXIMIZED)
-    gkjhgk(SDL_WINDOWEVENT_RESTORED)
-    gkjhgk(SDL_WINDOWEVENT_ENTER)
-    gkjhgk(SDL_WINDOWEVENT_LEAVE)
-    gkjhgk(SDL_WINDOWEVENT_FOCUS_GAINED)
-    gkjhgk(SDL_WINDOWEVENT_FOCUS_LOST)
-    gkjhgk(SDL_WINDOWEVENT_CLOSE)
+    case SDL_WINDOWEVENT_SHOWN:
+    case SDL_WINDOWEVENT_HIDDEN:
+    case SDL_WINDOWEVENT_EXPOSED:
+    case SDL_WINDOWEVENT_MOVED:
+    case SDL_WINDOWEVENT_RESIZED:
+    case SDL_WINDOWEVENT_MINIMIZED:
+    case SDL_WINDOWEVENT_MAXIMIZED:
+    case SDL_WINDOWEVENT_RESTORED:
+    case SDL_WINDOWEVENT_FOCUS_GAINED:
+    case SDL_WINDOWEVENT_FOCUS_LOST:
+    case SDL_WINDOWEVENT_CLOSE:
+        break;
+    case SDL_WINDOWEVENT_ENTER:
+    case SDL_WINDOWEVENT_LEAVE:
+        root.onWindowEvent(event);
+        break;
     }
     //LOG(INFO) << "WindowEvent: " << eventName << ", windowID=" << (int)event.windowID << ", data1=" << (int)event.data1 << ", data2=" << (int)event.data2 << "\n";
 }
