@@ -25,6 +25,8 @@ private:
     DummyControl dummy;
     Viewport viewport;
 
+    void removeButton();
+
 public:
     MainWindow();
     virtual ~MainWindow();
@@ -63,6 +65,8 @@ MainWindow::MainWindow()
     root.addChild(&viewport);
     root.addChild(&button);
 
+    button.setCallback(boost::bind(&MainWindow::removeButton, this));
+
     scrollh.setContentSize(dummy.getRect().w);
     scrollv.setContentSize(dummy.getRect().h);
 
@@ -72,6 +76,11 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::removeButton()
+{
+    root.removeChild(&button);
 }
 
 void MainWindow::draw()
