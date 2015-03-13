@@ -3,8 +3,6 @@
 
 Surface::Surface(int width, int height)
 {
-    LOG(TRACE) << "Surface: empty constructor\n";
-
     version = 0L;
     surface = SDL_CreateRGBSurface(0, width, height, 32,
         0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
@@ -19,8 +17,6 @@ Surface::Surface(int width, int height)
 
 Surface::Surface(const char *imgFile)
 {
-    LOG(TRACE) << "Surface: image constructor\n";
-
     version = 0L;
     surface = IMG_Load(imgFile);
     texture = NULL;
@@ -34,8 +30,6 @@ Surface::Surface(const char *imgFile)
 
 Surface::Surface(const Font& font, const char *text, SDL_Color color)
 {
-    LOG(TRACE) << "Surface: text constructor\n";
-
     version = 0L;
     surface = TTF_RenderText_Solid(font.getFont(), text, color);
     texture = NULL;
@@ -46,7 +40,7 @@ Surface::Surface(const Font& font, const char *text, SDL_Color color)
         exit(1);
     }
 
-    LOG(DEBUG) << "created surface from text of size " << getWidth() << "x" << getHeight() << "\n";
+    LOG(TRACE) << "created surface from text of size " << getWidth() << "x" << getHeight() << "\n";
 }
 
 Surface::~Surface()
