@@ -76,6 +76,12 @@ void Scrollbar::setPos(double p)
     else if(p < 0.0) pos = 0.0;
     else pos = p;
     repaint();
+    callback(pos);
+}
+
+void Scrollbar::setCallback(boost::function<void(double)> f)
+{
+    callback = f;
 }
 
 void Scrollbar::onMouseMotionEvent(SDL_MouseMotionEvent& event)
