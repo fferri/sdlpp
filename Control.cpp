@@ -257,3 +257,14 @@ void Control::renderChildren(const Window& window)
     }
 }
 
+int Control::getZIndex()
+{
+    return zIndex;
+}
+
+void Control::setZIndex(int z)
+{
+    zIndex = z;
+    redraw();
+}
+

@@ -62,6 +62,9 @@ public:
 
     virtual void render(const Window& window);
     virtual void renderChildren(const Window& window);
+
+    int getZIndex();
+    void setZIndex(int z);
 };
 
 #endif // CONTROL_H_INCLUDED
