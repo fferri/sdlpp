@@ -1,8 +1,8 @@
 #include "Scrollbar.h"
 #include "Logger.h"
 
-Scrollbar::Scrollbar(ControlsManager& cm)
-    : Control(cm)
+Scrollbar::Scrollbar(SDL_Rect rect)
+    : Control(rect)
 {
     bg = {30, 40, 0, 255};
     fg = {30, 140, 200, 255};
@@ -10,6 +10,8 @@ Scrollbar::Scrollbar(ControlsManager& cm)
     contentSize = 0;
     pos = 0.0;
     mouseDown = false;
+
+    paint();
 }
 
 Scrollbar::~Scrollbar()
@@ -40,23 +42,18 @@ bool Scrollbar::isHorizontal()
     return r.w > r.h;
 }
 
-void Scrollbar::paint(Surface& s)
+void Scrollbar::paint()
 {
-    Control::paint(s);
+    const SDL_Rect& r = getRect();
 
-    SDL_Rect r = getRect();
-
-    s.fill(bg);
+    canvas.fill(bg);
 
     int p = getHandlePos(), sz = getHandleSize();
 
     if(isHorizontal())
-        s.fillRect(p, 0, sz, r.h, fg);
+        canvas.fillRect(p, 0, sz, r.h, fg);
     else
-        s.fillRect(0, p, r.w, sz, fg);
-
-    if(hasFocus())
-        s.drawRect(2, 2, r.w - 4, r.h - 4, fo);
+        canvas.fillRect(0, p, r.w, sz, fg);
 }
 
 bool Scrollbar::acceptsKeyboardFocus() const
@@ -67,7 +64,7 @@ bool Scrollbar::acceptsKeyboardFocus() const
 void Scrollbar::setContentSize(int sz)
 {
     contentSize = sz;
-    repaint();
+    paint();
 }
 
 void Scrollbar::setPos(double p)
@@ -75,7 +72,7 @@ void Scrollbar::setPos(double p)
     if(p > 1.0) pos = 1.0;
     else if(p < 0.0) pos = 0.0;
     else pos = p;
-    repaint();
+    paint();
     callback(pos);
 }
 

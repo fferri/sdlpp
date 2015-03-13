@@ -57,6 +57,9 @@ Surface::~Surface()
 
 void Surface::resize(int newWidth, int newHeight, bool keepContents)
 {
+    if(newWidth == getWidth() && newHeight == getHeight())
+        return;
+
     SDL_Surface *new_surface = SDL_CreateRGBSurface(0, newWidth, newHeight, 32,
         0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
 

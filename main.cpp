@@ -1,7 +1,6 @@
 #include "System.h"
 #include "Surface.h"
 #include "Logger.h"
-#include "ControlsManager.h"
 #include "Scrollbar.h"
 #include "Viewport.h"
 #include "DummyControl.h"
@@ -19,11 +18,12 @@ class App : public System
 {
 private:
     Window window;
-    ControlsManager cm;
     
     Scrollbar scrollh, scrollv;
     SDL_Rect scrollhRect, scrollvRect;
     
+    Control root;
+
     DummyControl dummy;
     SDL_Rect dummyRect;
     
@@ -42,21 +42,18 @@ public:
 
 App::App()
     : window("Hello, SDL world!", 640, 480),
-      cm(window),
-      scrollh(cm), scrollv(cm),
-      scrollhRect({0, 460, 620, 20}), scrollvRect({620, 0, 20, 460}),
-      dummy(cm),
-      dummyRect({0, 0, 1000, 1000}),
-      viewport(cm, dummy, dummyRect),
-      viewportRect({0, 0, 620, 460})
+      root({0, 0, 640, 480}),
+      scrollh({0, 460, 620, 20}),
+      scrollv({620, 0, 20, 460}),
+      dummy({0, 0, 1000, 1000}),
+      viewport({0, 0, 620, 460}, dummy)
 {
-    cm.add(&scrollh, scrollhRect);
-    scrollh.setContentSize(dummyRect.w);
+    root.addChild(&scrollh);
+    root.addChild(&scrollv);
+    root.addChild(&viewport);
 
-    cm.add(&scrollv, scrollvRect);
-    scrollv.setContentSize(dummyRect.h);
-
-    cm.add(&viewport, viewportRect);
+    scrollh.setContentSize(dummy.getRect().w);
+    scrollv.setContentSize(dummy.getRect().h);
 
     scrollh.setCallback(boost::bind(&Viewport::setX, &viewport, _1));
     scrollv.setCallback(boost::bind(&Viewport::setY, &viewport, _1));
@@ -68,7 +65,7 @@ App::~App()
 
 void App::onKeyboardEvent(SDL_KeyboardEvent& event)
 {
-    cm.onKeyboardEvent(event);
+    root.onKeyboardEvent(event);
 
     if(event.type == SDL_KEYDOWN)
     {
@@ -83,17 +80,17 @@ void App::onKeyboardEvent(SDL_KeyboardEvent& event)
 
 void App::onMouseMotionEvent(SDL_MouseMotionEvent& event)
 {
-    cm.onMouseMotionEvent(event);
+    root.onMouseMotionEvent(event);
 }
 
 void App::onMouseButtonEvent(SDL_MouseButtonEvent& event)
 {
-    cm.onMouseButtonEvent(event);
+    root.onMouseButtonEvent(event);
 }
 
 void App::onMouseWheelEvent(SDL_MouseWheelEvent& event)
 {
-    cm.onMouseWheelEvent(event);
+    root.onMouseWheelEvent(event);
 }
 
 void App::onWindowEvent(SDL_WindowEvent& event)
@@ -121,10 +118,9 @@ void App::onWindowEvent(SDL_WindowEvent& event)
 
 void App::loop()
 {
-    if(cm.needsRepaint())
-    {
+    if(root.shouldRedraw()) {
         window.clear();
-        cm.render();
+        root.render(window);
         window.swapBuffer();
     }
 }

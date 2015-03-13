@@ -7,7 +7,6 @@
 #include <boost/bind.hpp>
 
 #include "Control.h"
-#include "ControlsManager.h"
 
 class Scrollbar : public Control
 {
@@ -26,10 +25,10 @@ protected:
     boost::function<void(double)> callback;
 
 public:
-    Scrollbar(ControlsManager& cm);
+    Scrollbar(SDL_Rect rect);
     virtual ~Scrollbar();
 
-    void paint(Surface& s);
+    void paint();
 
     bool acceptsKeyboardFocus() const;
 

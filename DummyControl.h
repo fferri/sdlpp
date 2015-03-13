@@ -2,7 +2,6 @@
 #define DUMMYCONTROL_H_INCLUDED
 
 #include "Control.h"
-#include "ControlsManager.h"
 
 class DummyControl : public Control
 {
@@ -10,10 +9,10 @@ protected:
     Surface checkerboardPattern;
 
 public:
-    DummyControl(ControlsManager& controlsManager);
+    DummyControl(SDL_Rect rect);
     virtual ~DummyControl();
 
-    void paint(Surface& s);
+    void paint();
 };
 
 #endif // DUMMYCONTROL_H_INCLUDED

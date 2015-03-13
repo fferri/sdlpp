@@ -1,9 +1,13 @@
 #include "Control.h"
-#include "ControlsManager.h"
+#include "Logger.h"
 
-Control::Control(ControlsManager& controlsManager)
-    : controlsManager(controlsManager),
-      repaintNeeded(true)
+Control::Control(SDL_Rect rect)
+    : rect(rect),
+      zIndex(1),
+      parent(NULL),
+      grabbingMouseControl(NULL),
+      canvas(rect.w, rect.h),
+      needsRedraw(true)
 {
 }
 
@@ -11,24 +15,112 @@ Control::~Control()
 {
 }
 
+bool Control::operator<(const Control& rhs) const
+{
+    return zIndex < rhs.zIndex;
+}
+
+void Control::addChild(Control *control)
+{
+    if(!control)
+    {
+        LOG(ERROR) << "Control::addChild(NULL)\n";
+        return;
+    }
+
+    children.insert(control);
+
+    if(control->parent)
+    {
+        LOG(WARN) << "Control::addChild: control has already another parent\n";
+    }
+    else
+    {
+        control->parent = this;
+    }
+}
+
+void Control::removeChild(Control *control)
+{
+    if(!control)
+    {
+        LOG(ERROR) << "Control::removeChild(NULL)\n";
+        return;
+    }
+
+    children.erase(control);
+
+    if(control->parent != this)
+    {
+        LOG(WARN) << "Control::removeChild: control has another parent\n";
+    }
+    else
+    {
+        control->parent = NULL;
+    }
+}
+
+Control * Control::childAt(int x, int y)
+{
+    if(parent)
+    {
+        SDL_Rect pr = parent->getAbsoluteRect();
+        x -= pr.x;
+        y -= pr.y;
+    }
+    x -= rect.x;
+    y -= rect.y;
+    for(std::set<Control *>::reverse_iterator it = children.rbegin(); it != children.rend(); ++it)
+    {
+        Control *c = *it;
+        const SDL_Rect& r = c->getRect();
+        if(x >= r.x && y >= r.y && x < (r.x + r.w) && y < (r.y + r.h))
+            return c;
+    }
+    return NULL;
+}
+
+Control * Control::getParent()
+{
+    return parent;
+}
+
+Control * Control::getRoot()
+{
+    Control *root = this;
+    
+    while(root->parent) root = root->parent;
+
+    return root;
+}
+
+void Control::grabMouse()
+{
+    Control *root = getRoot();
+
+    if(root->grabbingMouseControl)
+    {
+        LOG(WARN) << "Control::grabMouse: mouse was already grabbed\n";
+    }
+
+    root->grabbingMouseControl = this;
+}
+
+void Control::releaseMouse()
+{
+    Control *root = getRoot();
+
+    if(!root->grabbingMouseControl)
+    {
+        LOG(WARN) << "Control::releaseMouse: mouse was not grabbed\n";
+    }
+
+    root->grabbingMouseControl = NULL;
+}
+
 bool Control::acceptsKeyboardFocus() const
 {
     return false;
-}
-
-void Control::repaint()
-{
-    repaintNeeded = true;
-}
-
-bool Control::needsRepaint() const
-{
-    return repaintNeeded;
-}
-
-void Control::paint(Surface& s)
-{
-    repaintNeeded = false;
 }
 
 void Control::onKeyboardEvent(SDL_KeyboardEvent& event)
@@ -37,38 +129,86 @@ void Control::onKeyboardEvent(SDL_KeyboardEvent& event)
 
 void Control::onMouseMotionEvent(SDL_MouseMotionEvent& event)
 {
+    Control *c = grabbingMouseControl ? grabbingMouseControl : childAt(event.x, event.y);
+    if(c) c->onMouseMotionEvent(event);
 }
 
 void Control::onMouseButtonEvent(SDL_MouseButtonEvent& event)
 {
+    Control *c = grabbingMouseControl ? grabbingMouseControl : childAt(event.x, event.y);
+    if(c) c->onMouseButtonEvent(event);
 }
 
 void Control::onMouseWheelEvent(SDL_MouseWheelEvent& event)
 {
+    Control *c = grabbingMouseControl ? grabbingMouseControl : childAt(event.x, event.y);
+    if(c) c->onMouseWheelEvent(event);
 }
 
-SDL_Rect Control::getRect()
+void Control::setRect(SDL_Rect newRect)
 {
-    return controlsManager.getRect(this);
+    canvas.resize(newRect.w, newRect.h, true);
+    rect = newRect;
 }
 
-int Control::getZ()
+const SDL_Rect& Control::getRect()
 {
-    return controlsManager.getZ(this);
+    return rect;
 }
 
-void Control::grabMouse()
+SDL_Rect Control::getAbsoluteRect()
 {
-    controlsManager.grabMouse(this);
+    SDL_Rect r = rect;
+    if(parent)
+    {
+        SDL_Rect pr = parent->getAbsoluteRect();
+        r.x += pr.x;
+        r.y += pr.y;
+    }
+    return r;
 }
 
-void Control::releaseMouse()
+Surface& Control::getCanvas()
 {
-    controlsManager.releaseMouse(this);
+    return canvas;
 }
 
-bool Control::hasFocus()
+bool Control::shouldRedraw()
 {
-    return controlsManager.hasFocus(this);
+    if(needsRedraw) return true;
+
+    for(std::set<Control *>::iterator it = children.begin(); it != children.end(); ++it)
+    {
+        if((*it)->shouldRedraw()) return true;
+    }
+
+    return false;
+}
+
+void Control::redraw()
+{
+    needsRedraw = true;
+}
+
+void Control::resetRedrawFlag()
+{
+    needsRedraw = false;
+}
+
+void Control::render(const Window& window)
+{
+    SDL_Rect ar = getAbsoluteRect();
+    canvas.render(window, ar.x, ar.y);
+    resetRedrawFlag();
+
+    renderChildren(window);
+}
+
+void Control::renderChildren(const Window& window)
+{
+    for(std::set<Control *>::iterator it = children.begin(); it != children.end(); ++it)
+    {
+        (*it)->render(window);
+    }
 }
 

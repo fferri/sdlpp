@@ -1,8 +1,9 @@
 #include "Viewport.h"
+#include "Logger.h"
 
-Viewport::Viewport(ControlsManager& controlsManager, Control& child, SDL_Rect childRect)
-    : Control(controlsManager),
-      child(child), childRect(childRect),
+Viewport::Viewport(SDL_Rect rect, Control& child)
+    : Control(rect),
+      child(child),
       posX(0.0), posY(0.0)
 {
 }
@@ -22,7 +23,8 @@ void Viewport::translateMouseEvent(E& e)
 
 void Viewport::getTranslation(int& x, int& y)
 {
-    SDL_Rect r = getRect();
+    const SDL_Rect& r = getRect();
+    const SDL_Rect& childRect = child.getRect();
     x = (childRect.w > r.w) ? int((childRect.w - r.w) * posX) : 0;
     y = (childRect.h > r.h) ? int((childRect.h - r.h) * posY) : 0;
 }
@@ -31,19 +33,19 @@ void Viewport::set(double x, double y)
 {
     posX = (x < 0 ? 0 : (x > 1 ? 1 : x));
     posY = (y < 0 ? 0 : (y > 1 ? 1 : y));
-    repaint();
+    redraw();
 }
 
 void Viewport::setX(double x)
 {
     posX = (x < 0 ? 0 : (x > 1 ? 1 : x));
-    repaint();
+    redraw();
 }
 
 void Viewport::setY(double y)
 {
     posY = (y < 0 ? 0 : (y > 1 ? 1 : y));
-    repaint();
+    redraw();
 }
 
 bool Viewport::acceptsKeyboardFocus() const
@@ -51,23 +53,20 @@ bool Viewport::acceptsKeyboardFocus() const
     return child.acceptsKeyboardFocus();
 }
 
-void Viewport::repaint()
+bool Viewport::shouldRedraw()
 {
+    return Control::shouldRedraw() || child.shouldRedraw();
 }
 
-bool Viewport::needsRepaint()
+void Viewport::render(const Window& window)
 {
-    return child.needsRepaint();
-}
-
-void Viewport::paint(Surface& s)
-{
-    SDL_Rect r = getRect();
-    Surface s1(childRect.w, childRect.h);
-    child.paint(s1);
+    Surface& childCanvas = child.getCanvas();
+    SDL_Rect ar = getAbsoluteRect();
     int ox, oy;
     getTranslation(ox, oy);
-    s.blit(s1, ox, oy, r.w, r.h, 0, 0);
+    childCanvas.render(window, ox, oy, ar.w, ar.h, ar.x, ar.y, ar.w, ar.h);
+    resetRedrawFlag();
+    child.resetRedrawFlag();
 }
 
 void Viewport::onKeyboardEvent(SDL_KeyboardEvent& event)
