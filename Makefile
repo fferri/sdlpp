@@ -47,12 +47,12 @@ CXXFLAGS = $(CFLAGS)
 
 .PHONY: clean all
 
-OBJS = main.o Logger.o System.o Window.o Surface.o Font.o Control.o PartModel.o PartView.o Event.o Scrollbar.o Viewport.o DummyControl.o Button.o
+OBJS = main.o Logger.o System.o Timer.o Window.o Surface.o Font.o Control.o PartModel.o PartView.o Event.o Scrollbar.o Viewport.o DummyControl.o Button.o
 TARGETS = main
 
 all: $(TARGETS)
 
-main: main.o Logger.o System.o Window.o Surface.o Font.o Control.o PartModel.o PartView.o Event.o Scrollbar.o Viewport.o DummyControl.o Button.o
+main: main.o Logger.o System.o Timer.o Window.o Surface.o Font.o Control.o PartModel.o PartView.o Event.o Scrollbar.o Viewport.o DummyControl.o Button.o
 	$(CC) $^ $(LDLIBS) -o $@
 
 -include $(OBJS:.o=.d)
