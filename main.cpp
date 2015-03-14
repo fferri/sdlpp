@@ -1,4 +1,4 @@
-#include "System.h"
+#include "Application.h"
 #include "Timer.h"
 #include "Surface.h"
 #include "Logger.h"
@@ -44,7 +44,7 @@ public:
     void onWindowEvent(SDL_WindowEvent& event);
 };
 
-class Application : public System
+class TheApplication : public Application
 {
 private:
     MainWindow window;
@@ -52,7 +52,7 @@ public:
     void loop() { window.draw(); }
 };
 
-Application *application;
+TheApplication *application;
 
 MainWindow::MainWindow()
     : Window("Hello, SDL world!", 640, 480),
@@ -172,7 +172,7 @@ int main(int argc, char **argv)
 {
     SET_LOG_LEVEL(DEBUG);
 
-    Application a;
+    TheApplication a;
     application = &a;
     a.run();
 }
