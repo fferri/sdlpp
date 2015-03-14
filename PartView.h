@@ -1,7 +1,7 @@
 #ifndef PARTVIEW_H_INCLUDED
 #define PARTVIEW_H_INCLUDED
 
-#include "System.h"
+#include "Window.h"
 #include "Surface.h"
 #include "PartModel.h"
 
