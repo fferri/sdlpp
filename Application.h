@@ -16,17 +16,18 @@ protected:
     bool verbose;
     std::string basePath;
 
+    virtual void init();
+    virtual void cleanup();
+    void processPendingEvents();
+    void dispatchEvent(SDL_Event& event);
+
 public:
     Application();
     virtual ~Application();
-    virtual void init();
-    virtual void cleanup();
     void requestShutdown();
-    void processPendingEvents();
-    void dispatchEvent(SDL_Event& event);
     void run();
+
     long ticks();
-    void clear();
 
     virtual void onDropEvent(SDL_DropEvent& event);
     virtual void onKeyboardEvent(SDL_KeyboardEvent& event);
