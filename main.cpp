@@ -1,4 +1,5 @@
 #include "System.h"
+#include "Timer.h"
 #include "Surface.h"
 #include "Logger.h"
 #include "Scrollbar.h"
@@ -24,6 +25,7 @@ private:
     Button button;
     DummyControl dummy;
     Viewport viewport;
+    CallbackTimer timer;
 
     void removeButton();
 
@@ -32,6 +34,8 @@ public:
     virtual ~MainWindow();
 
     void draw();
+
+    void foo();
 
     void onKeyboardEvent(SDL_KeyboardEvent& event);
     void onMouseMotionEvent(SDL_MouseMotionEvent& event);
@@ -65,6 +69,9 @@ MainWindow::MainWindow()
     root.addChild(&viewport);
     root.addChild(&button);
 
+    timer.setCallback(boost::bind(&MainWindow::foo, this));
+    timer.start(500);
+
     button.setCallback(boost::bind(&MainWindow::removeButton, this));
 
     scrollh.setContentSize(dummy.getRect().w);
@@ -81,6 +88,11 @@ MainWindow::~MainWindow()
 void MainWindow::removeButton()
 {
     root.removeChild(&button);
+}
+
+void MainWindow::foo()
+{
+    scrollh.setPos(0.5 + 0.5 * sin(application->ticks() * 0.001));
 }
 
 void MainWindow::draw()
