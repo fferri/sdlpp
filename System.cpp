@@ -88,6 +88,9 @@ void System::dispatchEvent(SDL_Event& event)
     case SDL_QUIT:
         onQuitEvent(event.quit);
         break;
+    case SDL_USEREVENT:
+        onUserEvent(event.user);
+        break;
     }
 }
 
@@ -161,6 +164,27 @@ void System::onWindowEvent(SDL_WindowEvent& event)
 void System::onQuitEvent(SDL_QuitEvent& event)
 {
     requestShutdown();
+}
+
+void System::onUserEvent(SDL_UserEvent& event)
+{
+}
+
+void System::pushUserEvent(SDL_UserEvent& event)
+{
+    SDL_Event e;
+    e.type = SDL_USEREVENT;
+    e.user = event;
+    int r = SDL_PushEvent(&e);
+    if(r > 0) return;
+    if(r == 0)
+    {
+        LOG(WARN) << "System::pushUserEvent(): event was filtered\n";
+    }
+    if(r < 0)
+    {
+        LOG(ERROR) << "System::pushUserEvent(): SDL_PushEvent: " << SDL_GetError() << "\n";
+    }
 }
 
 void System::loop()

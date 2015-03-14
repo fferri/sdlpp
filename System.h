@@ -35,6 +35,9 @@ public:
     virtual void onMouseWheelEvent(SDL_MouseWheelEvent& event);
     virtual void onWindowEvent(SDL_WindowEvent& event);
     virtual void onQuitEvent(SDL_QuitEvent& event);
+    virtual void onUserEvent(SDL_UserEvent& event);
+
+    void pushUserEvent(SDL_UserEvent& event);
 
     virtual void loop();
 };
