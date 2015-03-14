@@ -1,8 +1,8 @@
-#include "System.h"
+#include "Application.h"
 #include "Window.h"
 #include "Logger.h"
 
-System::System()
+Application::Application()
 {
     shutdown = false;
     verbose = true;
@@ -10,12 +10,12 @@ System::System()
     init();
 }
 
-System::~System()
+Application::~Application()
 {
     cleanup();
 }
 
-void System::init()
+void Application::init()
 {
     if(SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
@@ -49,19 +49,19 @@ void System::init()
     SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
 }
 
-void System::cleanup()
+void Application::cleanup()
 {
     IMG_Quit();
     TTF_Quit();
     SDL_Quit();
 }
 
-void System::requestShutdown()
+void Application::requestShutdown()
 {
     shutdown = true;
 }
 
-void System::dispatchEvent(SDL_Event& event)
+void Application::dispatchEvent(SDL_Event& event)
 {
     switch(event.type)
     {
@@ -94,7 +94,7 @@ void System::dispatchEvent(SDL_Event& event)
     }
 }
 
-void System::processPendingEvents()
+void Application::processPendingEvents()
 {
     SDL_Event event;
     if(SDL_WaitEvent(&event))
@@ -103,12 +103,12 @@ void System::processPendingEvents()
     }
     else
     {
-        LOG(ERROR) << "System::run(): SDL_WaitEvent: " << SDL_GetError() << "\n";
+        LOG(ERROR) << "Application::run(): SDL_WaitEvent: " << SDL_GetError() << "\n";
         SDL_Delay(80);
     }
 }
 
-void System::run()
+void Application::run()
 {
     while(!shutdown)
     {
@@ -117,60 +117,60 @@ void System::run()
     }
 }
 
-long System::ticks()
+long Application::ticks()
 {
     return SDL_GetTicks();
 }
 
-void System::onDropEvent(SDL_DropEvent& event)
+void Application::onDropEvent(SDL_DropEvent& event)
 {
 }
 
-void System::onKeyboardEvent(SDL_KeyboardEvent& event)
+void Application::onKeyboardEvent(SDL_KeyboardEvent& event)
 {
     Window *win = Window::fromID(event.windowID);
     if(win)
         win->onKeyboardEvent(event);
 }
 
-void System::onMouseMotionEvent(SDL_MouseMotionEvent& event)
+void Application::onMouseMotionEvent(SDL_MouseMotionEvent& event)
 {
     Window *win = Window::fromID(event.windowID);
     if(win)
         win->onMouseMotionEvent(event);
 }
 
-void System::onMouseButtonEvent(SDL_MouseButtonEvent& event)
+void Application::onMouseButtonEvent(SDL_MouseButtonEvent& event)
 {
     Window *win = Window::fromID(event.windowID);
     if(win)
         win->onMouseButtonEvent(event);
 }
 
-void System::onMouseWheelEvent(SDL_MouseWheelEvent& event)
+void Application::onMouseWheelEvent(SDL_MouseWheelEvent& event)
 {
     Window *win = Window::fromID(event.windowID);
     if(win)
         win->onMouseWheelEvent(event);
 }
 
-void System::onWindowEvent(SDL_WindowEvent& event)
+void Application::onWindowEvent(SDL_WindowEvent& event)
 {
     Window *win = Window::fromID(event.windowID);
     if(win)
         win->onWindowEvent(event);
 }
 
-void System::onQuitEvent(SDL_QuitEvent& event)
+void Application::onQuitEvent(SDL_QuitEvent& event)
 {
     requestShutdown();
 }
 
-void System::onUserEvent(SDL_UserEvent& event)
+void Application::onUserEvent(SDL_UserEvent& event)
 {
 }
 
-void System::pushUserEvent(SDL_UserEvent& event)
+void Application::pushUserEvent(SDL_UserEvent& event)
 {
     SDL_Event e;
     e.type = SDL_USEREVENT;
@@ -179,15 +179,15 @@ void System::pushUserEvent(SDL_UserEvent& event)
     if(r > 0) return;
     if(r == 0)
     {
-        LOG(WARN) << "System::pushUserEvent(): event was filtered\n";
+        LOG(WARN) << "Application::pushUserEvent(): event was filtered\n";
     }
     if(r < 0)
     {
-        LOG(ERROR) << "System::pushUserEvent(): SDL_PushEvent: " << SDL_GetError() << "\n";
+        LOG(ERROR) << "Application::pushUserEvent(): SDL_PushEvent: " << SDL_GetError() << "\n";
     }
 }
 
-void System::loop()
+void Application::loop()
 {
 }
 

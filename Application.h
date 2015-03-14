@@ -1,5 +1,5 @@
-#ifndef SYSTEM_H_INCLUDED
-#define SYSTEM_H_INCLUDED
+#ifndef APPLICATION_H_INCLUDED
+#define APPLICATION_H_INCLUDED
 
 #include <string>
 #include <vector>
@@ -9,7 +9,7 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
-class System
+class Application
 {
 protected:
     bool shutdown;
@@ -17,8 +17,8 @@ protected:
     std::string basePath;
 
 public:
-    System();
-    virtual ~System();
+    Application();
+    virtual ~Application();
     virtual void init();
     virtual void cleanup();
     void requestShutdown();
@@ -42,4 +42,4 @@ public:
     virtual void loop();
 };
 
-#endif // SYSTEM_H_INCLUDED
+#endif // APPLICATION_H_INCLUDED
