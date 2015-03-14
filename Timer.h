@@ -30,11 +30,10 @@ private:
     static Uint32 callbackStatic(Uint32 interval, void *data);
 };
 
-template <class T>
 class CallbackTimer : public Timer
 {
 public:
-    typedef boost::function<T> Callback;
+    typedef boost::function<void(void)> Callback;
 
     void setCallback(Callback c);
 

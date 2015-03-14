@@ -47,14 +47,12 @@ Uint32 Timer::callback(Uint32 interval)
     return 0;
 }
 
-template <class T>
-void CallbackTimer<T>::setCallback(Callback c)
+void CallbackTimer::setCallback(Callback c)
 {
     callbackFunction = c;
 }
 
-template <class T>
-Uint32 CallbackTimer<T>::callback(Uint32 interval)
+Uint32 CallbackTimer::callback(Uint32 interval)
 {
     if(callbackFunction)
     {
