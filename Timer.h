@@ -12,6 +12,8 @@
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 
+#include "Application.h"
+
 class Timer
 {
 protected:
@@ -39,6 +41,18 @@ public:
 
 protected:
     Callback callbackFunction;
+
+    Uint32 callback(Uint32 interval);
+};
+
+class EventTimer : public Timer
+{
+protected:
+    SDL_UserEvent userEvent;
+    Application& app;
+
+public:
+    EventTimer(Application& app, SDL_UserEvent& userEvent);
 
     Uint32 callback(Uint32 interval);
 };

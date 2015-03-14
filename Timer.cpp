@@ -65,3 +65,14 @@ Uint32 CallbackTimer::callback(Uint32 interval)
     }
 }
 
+EventTimer::EventTimer(Application& app, SDL_UserEvent& userEvent)
+    : app(app), userEvent(userEvent)
+{
+}
+
+Uint32 EventTimer::callback(Uint32 interval)
+{
+    app.pushUserEvent(userEvent);
+    return interval;
+}
+
