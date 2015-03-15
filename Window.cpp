@@ -105,6 +105,11 @@ void Window::onUserEvent(SDL_UserEvent& event)
 {
 }
 
+Uint32 Window::getID()
+{
+    return SDL_GetWindowID(window);
+}
+
 Window * Window::fromID(Uint32 windowID)
 {
     SDL_Window *win = SDL_GetWindowFromID(windowID);

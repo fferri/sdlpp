@@ -34,6 +34,8 @@ public:
     virtual void onWindowEvent(SDL_WindowEvent& event);
     virtual void onUserEvent(SDL_UserEvent& event);
 
+    Uint32 getID();
+
     static Window * fromID(Uint32 windowID);
 };
 
