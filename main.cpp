@@ -25,7 +25,8 @@ private:
     Button button;
     DummyControl dummy;
     Viewport viewport;
-    CallbackTimer timer;
+    EventTimer timer;
+    SDL_UserEvent timerEvent;
 
     void removeButton();
 
@@ -42,6 +43,7 @@ public:
     void onMouseButtonEvent(SDL_MouseButtonEvent& event);
     void onMouseWheelEvent(SDL_MouseWheelEvent& event);
     void onWindowEvent(SDL_WindowEvent& event);
+    void onUserEvent(SDL_UserEvent& event);
 };
 
 class TheApplication : public Application
@@ -62,14 +64,15 @@ MainWindow::MainWindow()
       scrollv({620, 0, 20, 460}),
       dummy({0, 0, 1000, 1000}),
       button({40, 40, 100, 30}, "Click me", font),
-      viewport({0, 0, 620, 460}, dummy)
+      viewport({0, 0, 620, 460}, dummy),
+      timerEvent({SDL_USEREVENT, 0, getID(), 1, 0, 0}),
+      timer(*application, timerEvent)
 {
     root.addChild(&scrollh);
     root.addChild(&scrollv);
     root.addChild(&viewport);
     root.addChild(&button);
 
-    timer.setCallback(boost::bind(&MainWindow::foo, this));
     timer.start(500);
 
     button.setCallback(boost::bind(&MainWindow::removeButton, this));
@@ -166,6 +169,15 @@ void MainWindow::onWindowEvent(SDL_WindowEvent& event)
         break;
     }
     //LOG(INFO) << "WindowEvent: " << eventName << ", windowID=" << (int)event.windowID << ", data1=" << (int)event.data1 << ", data2=" << (int)event.data2 << "\n";
+}
+
+void MainWindow::onUserEvent(SDL_UserEvent& event)
+{
+        LOG(INFO) << " timer window! 00\n";
+    if(event.code == timerEvent.code)
+    {
+        LOG(INFO) << " timer window!\n";
+    }
 }
 
 int main(int argc, char **argv)
