@@ -168,6 +168,9 @@ void Application::onQuitEvent(SDL_QuitEvent& event)
 
 void Application::onUserEvent(SDL_UserEvent& event)
 {
+    Window *win = Window::fromID(event.windowID);
+    if(win)
+        win->onUserEvent(event);
 }
 
 void Application::pushUserEvent(SDL_UserEvent& event)

@@ -32,6 +32,7 @@ public:
     virtual void onMouseButtonEvent(SDL_MouseButtonEvent& event);
     virtual void onMouseWheelEvent(SDL_MouseWheelEvent& event);
     virtual void onWindowEvent(SDL_WindowEvent& event);
+    virtual void onUserEvent(SDL_UserEvent& event);
 
     static Window * fromID(Uint32 windowID);
 };
