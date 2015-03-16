@@ -21,6 +21,8 @@ protected:
     void processPendingEvents();
     void dispatchEvent(SDL_Event& event);
 
+    Uint32 EVENT_TYPE_TIMER;
+
 public:
     Application();
     virtual ~Application();
@@ -39,6 +41,8 @@ public:
     virtual void onUserEvent(SDL_UserEvent& event);
 
     void pushUserEvent(SDL_UserEvent& event);
+
+    Uint32 getEventTypeTimer();
 
     virtual void loop();
 };

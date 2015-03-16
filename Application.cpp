@@ -3,6 +3,7 @@
 #include "Logger.h"
 
 Application::Application()
+    : EVENT_TYPE_TIMER(0)
 {
     shutdown = false;
     verbose = true;
@@ -47,6 +48,8 @@ void Application::init()
     SDL_EventState(SDL_QUIT, SDL_ENABLE);
     SDL_EventState(SDL_WINDOWEVENT, SDL_ENABLE);
     SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
+
+    EVENT_TYPE_TIMER = SDL_RegisterEvents(1);
 }
 
 void Application::cleanup()
@@ -90,6 +93,9 @@ void Application::dispatchEvent(SDL_Event& event)
         break;
     case SDL_USEREVENT:
         onUserEvent(event.user);
+        break;
+    default:
+        LOG(TRACE) << "Application::dispatchEvent({type=" << event.type << "})\n";
         break;
     }
 }
@@ -168,6 +174,8 @@ void Application::onQuitEvent(SDL_QuitEvent& event)
 
 void Application::onUserEvent(SDL_UserEvent& event)
 {
+    LOG(TRACE) << "Application::onUserEvent({timestamp=" << event.timestamp << ", windowID=" << event.windowID << ", code=" << event.code << ", data1=" << event.data1 << ", data2=" << event.data2 << "})\n";
+
     Window *win = Window::fromID(event.windowID);
     if(win)
         win->onUserEvent(event);
@@ -175,6 +183,8 @@ void Application::onUserEvent(SDL_UserEvent& event)
 
 void Application::pushUserEvent(SDL_UserEvent& event)
 {
+    LOG(TRACE) << "Application::pushUserEvent({type=" << event.type << "})\n";
+
     SDL_Event e;
     e.type = SDL_USEREVENT;
     e.user = event;
@@ -188,6 +198,11 @@ void Application::pushUserEvent(SDL_UserEvent& event)
     {
         LOG(ERROR) << "Application::pushUserEvent(): SDL_PushEvent: " << SDL_GetError() << "\n";
     }
+}
+
+Uint32 Application::getEventTypeTimer()
+{
+    return EVENT_TYPE_TIMER;
 }
 
 void Application::loop()
