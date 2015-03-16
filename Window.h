@@ -37,6 +37,7 @@ public:
     Uint32 getID();
 
     static Window * fromID(Uint32 windowID);
+    static Window * fromPtr(SDL_Window *window);
 };
 
 #endif // WINDOW_H_INCLUDED

@@ -112,9 +112,12 @@ Uint32 Window::getID()
 
 Window * Window::fromID(Uint32 windowID)
 {
-    SDL_Window *win = SDL_GetWindowFromID(windowID);
-
-    if(!win) return NULL;
-
-    return reinterpret_cast<Window *>(SDL_GetWindowData(win, "Window*"));
+    return Window::fromPtr(SDL_GetWindowFromID(windowID));
 }
+
+Window * Window::fromPtr(SDL_Window *window)
+{
+    if(!window) return NULL;
+    return reinterpret_cast<Window *>(SDL_GetWindowData(window, "Window*"));
+}
+
