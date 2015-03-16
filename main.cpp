@@ -25,8 +25,8 @@ private:
     Button button;
     DummyControl dummy;
     Viewport viewport;
-    EventTimer timer;
     SDL_UserEvent timerEvent;
+    EventTimer timer;
 
     void removeButton();
 
@@ -54,7 +54,7 @@ public:
     void loop() { window.draw(); }
 };
 
-TheApplication *application;
+TheApplication application;
 
 MainWindow::MainWindow()
     : Window("Hello, SDL world!", 640, 480),
@@ -65,8 +65,8 @@ MainWindow::MainWindow()
       dummy({0, 0, 1000, 1000}),
       button({40, 40, 100, 30}, "Click me", font),
       viewport({0, 0, 620, 460}, dummy),
-      timerEvent({SDL_USEREVENT, 0, getID(), 1, 0, 0}),
-      timer(*application, timerEvent)
+      timerEvent({.type=SDL_USEREVENT, .windowID=getID(), .code=1}),
+      timer(application, timerEvent)
 {
     root.addChild(&scrollh);
     root.addChild(&scrollv);
@@ -95,7 +95,7 @@ void MainWindow::removeButton()
 
 void MainWindow::foo()
 {
-    scrollh.setPos(0.5 + 0.5 * sin(application->ticks() * 0.001));
+    scrollh.setPos(0.5 + 0.5 * sin(application.ticks() * 0.001));
 }
 
 void MainWindow::draw()
@@ -118,7 +118,7 @@ void MainWindow::onKeyboardEvent(SDL_KeyboardEvent& event)
         switch(event.keysym.sym)
         {
         case SDLK_ESCAPE:
-            application->requestShutdown();
+            application.requestShutdown();
             break;
         }
     }
@@ -182,10 +182,6 @@ void MainWindow::onUserEvent(SDL_UserEvent& event)
 
 int main(int argc, char **argv)
 {
-    SET_LOG_LEVEL(DEBUG);
-
-    TheApplication a;
-    application = &a;
-    a.run();
+    application.run();
 }
 
