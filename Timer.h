@@ -52,7 +52,7 @@ protected:
     Application& app;
 
 public:
-    EventTimer(Application& app, SDL_UserEvent& userEvent);
+    EventTimer(Application& app, SDL_UserEvent userEvent);
 
     Uint32 callback(Uint32 interval);
 };
