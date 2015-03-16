@@ -2,9 +2,8 @@ SDL_CFLAGS=$(shell pkg-config --cflags sdl2 SDL2_image SDL2_net SDL2_ttf)
 SDL_LIBS=$(shell pkg-config --libs sdl2 SDL2_image SDL2_net SDL2_ttf)
 PROTOBUF_CFLAGS=$(shell pkg-config --cflags protobuf)
 PROTOBUF_LIBS=$(shell pkg-config --libs protobuf)
-
-CFLAGS := -std=c++11 -O0 -ggdb $(SDL_CFLAGS) $(PROTOBUF_CFLAGS) $(OPT_CFLAGS)
-LDLIBS := -lm -lstdc++ $(SDL_LIBS) $(PROTOBUF_LIBS)
+BOOST_CFLAGS=-DBOOST_LOG_DYN_LINK -I/opt/local/include
+BOOST_LIBS0=-lboost_system -lboost_thread -lboost_filesystem -lboost_log
 
 ifeq ($(OS),Windows_NT)
     CFLAGS += -DWIN32
@@ -28,7 +27,6 @@ else
 		ifneq ($(filter arm%,$(UNAME_P)),)
 			CFLAGS += -DARM
 		endif
-        LDLIBS += -lboost_system -lboost_thread -lboost_filesystem -lboost_log -lboost_log_setup
     endif
     ifeq ($(UNAME_S),Darwin)
         CFLAGS += -DOSX
@@ -39,11 +37,16 @@ else
 		ifneq ($(filter %86,$(UNAME_M)),)
 			CFLAGS += -DIA32
 		endif
-        LDLIBS += -lboost_system-mt -lboost_thread-mt -lboost_filesystem-mt -lboost_log-mt -lboost_log_setup-mt
+		BOOST_LIBS=$(addsuffix -mt,$(BOOST_LIBS0))
     endif
 endif
+ifndef BOOST_LIBS
+	BOOST_LIBS=$(BOOST_LIBS0)
+endif
 
+CFLAGS := -std=c++11 -O0 -ggdb $(BOOST_CFLAGS) $(SDL_CFLAGS) $(PROTOBUF_CFLAGS) $(OPT_CFLAGS)
 CXXFLAGS = $(CFLAGS)
+LDLIBS := -lm -lstdc++ $(BOOST_LIBS) $(SDL_LIBS) $(PROTOBUF_LIBS)
 
 .PHONY: clean all
 
