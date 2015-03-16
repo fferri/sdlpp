@@ -36,8 +36,6 @@ public:
 
     void draw();
 
-    void foo();
-
     void onKeyboardEvent(SDL_KeyboardEvent& event);
     void onMouseMotionEvent(SDL_MouseMotionEvent& event);
     void onMouseButtonEvent(SDL_MouseButtonEvent& event);
@@ -73,7 +71,7 @@ MainWindow::MainWindow()
     root.addChild(&viewport);
     root.addChild(&button);
 
-    timer.start(500);
+    //timer.start(50);
 
     button.setCallback(boost::bind(&MainWindow::removeButton, this));
 
@@ -91,11 +89,6 @@ MainWindow::~MainWindow()
 void MainWindow::removeButton()
 {
     root.removeChild(&button);
-}
-
-void MainWindow::foo()
-{
-    scrollh.setPos(0.5 + 0.5 * sin(application.ticks() * 0.001));
 }
 
 void MainWindow::draw()
@@ -173,10 +166,9 @@ void MainWindow::onWindowEvent(SDL_WindowEvent& event)
 
 void MainWindow::onUserEvent(SDL_UserEvent& event)
 {
-        LOG(INFO) << " timer window! 00\n";
     if(event.code == timerEvent.code)
     {
-        LOG(INFO) << " timer window!\n";
+        scrollh.setPos(0.5 + 0.5 * sin(application.ticks() * 0.001));
     }
 }
 
