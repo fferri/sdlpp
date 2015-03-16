@@ -92,7 +92,6 @@ Control * Control::childAt(int x, int y)
         const SDL_Rect& r = c->getRect();
         if(x >= r.x && y >= r.y && x < (r.x + r.w) && y < (r.y + r.h))
         {
-            LOG(TRACE) << "Control::childAt(" << x << ", " << y << ") found " << c << "\n";
             return c;
         }
     }
