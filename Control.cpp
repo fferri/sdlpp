@@ -49,7 +49,6 @@ void Control::removeChild(Control *control)
 {
     if(!control)
     {
-        LOG(ERROR) << "Control::removeChild(NULL)\n";
         return;
     }
 
@@ -119,7 +118,7 @@ void Control::grabMouse()
 
     if(root->grabbingMouseControl)
     {
-        LOG(WARN) << "Control::grabMouse: mouse was already grabbed\n";
+        LOG(DEBUG) << "Control::grabMouse: mouse was already grabbed\n";
     }
 
     root->grabbingMouseControl = this;
@@ -131,7 +130,7 @@ void Control::releaseMouse()
 
     if(!root->grabbingMouseControl)
     {
-        LOG(WARN) << "Control::releaseMouse: mouse was not grabbed\n";
+        LOG(DEBUG) << "Control::releaseMouse: mouse was not grabbed\n";
     }
 
     root->grabbingMouseControl = NULL;
