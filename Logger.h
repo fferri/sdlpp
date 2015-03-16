@@ -23,6 +23,6 @@ enum LOG_LEVEL
 
 extern LOG_LEVEL log_level;
 
-#define LOG(l) if((l) < log_level) ; else std::cout << LOG_LEVEL_STR(l) << ": "
+#define LOG(l) if((l) < log_level) ; else std::cout << "[" << LOG_LEVEL_STR(l) << "] " << __FILE__ << ":" << __LINE__ << " - " << __func__ << ": "
 
 #endif // LOGGER_H_INCLUDED

@@ -1,4 +1,4 @@
 #include "Logger.h"
 
-LOG_LEVEL log_level = DEBUG;
+LOG_LEVEL log_level = TRACE;
 
