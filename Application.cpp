@@ -88,6 +88,11 @@ void Application::dispatchEvent(SDL_Event& event)
     case SDL_WINDOWEVENT:
         onWindowEvent(event.window);
         break;
+    case SDL_FINGERDOWN:
+    case SDL_FINGERUP:
+    case SDL_FINGERMOTION:
+        onTouchFingerEvent(event.tfinger);
+        break;
     case SDL_QUIT:
         onQuitEvent(event.quit);
         break;
@@ -165,6 +170,10 @@ void Application::onWindowEvent(SDL_WindowEvent& event)
     Window *win = Window::fromID(event.windowID);
     if(win)
         win->onWindowEvent(event);
+}
+
+void Application::onTouchFingerEvent(SDL_TouchFingerEvent& event)
+{
 }
 
 void Application::onQuitEvent(SDL_QuitEvent& event)
