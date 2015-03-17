@@ -6,6 +6,9 @@
 #include "Viewport.h"
 #include "DummyControl.h"
 #include "Button.h"
+#include "Event.h"
+#include "PartModel.h"
+#include "PartView.h"
 
 #include <cmath>
 #include <string>
@@ -27,6 +30,8 @@ private:
     Viewport viewport;
     SDL_UserEvent timerEvent;
     EventTimer timer;
+    PartModel partModel;
+    PartView partView;
 
     void removeButton();
 
@@ -64,12 +69,22 @@ MainWindow::MainWindow()
       button({40, 40, 100, 30}, "Click me", font),
       viewport({0, 0, 620, 460}, dummy),
       timerEvent({.type=SDL_USEREVENT, .windowID=getID(), .code=1}),
-      timer(application, timerEvent)
+      timer(application, timerEvent),
+      partModel("name", "type"),
+      partView({40, 80, 400, 300}, partModel)
 {
     root.addChild(&scrollh);
     root.addChild(&scrollv);
     root.addChild(&viewport);
     root.addChild(&button);
+    root.addChild(&partView);
+
+    partModel.add(40, Event::Note(20, 0, 40, 100));
+    partModel.add(80, Event::Note(30, 0, 20, 100));
+    partModel.add(100, Event::Note(35, 0, 10, 100));
+    partModel.add(120, Event::Note(20, 0, 40, 100));
+    partView.paint();
+    partView.redraw();
 
     //timer.start(50);
 
