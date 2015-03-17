@@ -4,52 +4,32 @@
 #include <cstddef>
 #include <string>
 #include <vector>
+#include <map>
+#include <sstream>
 
 typedef unsigned long TimeStamp;
-
-struct EventDataMIDI
-{
-    unsigned char port_id;
-    unsigned char status;
-    unsigned char data1;
-    unsigned char data2;
-};
-
-union EventDataPayload
-{
-    int i;
-    float f;
-    EventDataMIDI m;
-};
-
-struct EventData
-{
-    char type;
-    EventDataPayload data;
-};
 
 class Event
 {
 protected:
-    std::vector<EventData> data;
-
-public:
+    std::string type;
+    std::map<std::string, long> imap;
     Event();
-    virtual ~Event();
-
-    size_t getLength() const;
-    char getType(size_t index) const;
-    std::string getType() const;
-    void add(const EventData& e);
-    void add(int i);
-    void add(float f);
-    void add(EventDataMIDI m);
-    void remove(size_t index);
-    void set(size_t index, int i);
-    void set(size_t index, float f);
-    void set(size_t index, EventDataMIDI m);
-    EventDataPayload get(size_t index) const;
+public:
+    virtual bool operator==(const Event& rhs) const;
+    virtual bool operator<(const Event& rhs) const;
     std::string str() const;
+    static Event Note(int note, int finetune, int length, int velocity);
+    static Event Param(int param, int value);
+    std::string getType() const;
+    int getNote() const;
+    int getFinetune() const;
+    int getLength() const;
+    int getVelocity() const;
+    int getParam() const;
+    int getValue() const;
 };
+
+std::ostream& operator<<(std::ostream& strm, const Event& e);
 
 #endif // EVENT_H_INCLUDED

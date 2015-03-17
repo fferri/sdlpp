@@ -1,115 +1,105 @@
 #include "Event.h"
+#include "Logger.h"
 #include <sstream>
 
 Event::Event()
 {
 }
 
-Event::~Event()
+bool Event::operator==(const Event& rhs) const
 {
-}
-
-size_t Event::getLength() const
-{
-    return data.size();
-}
-
-char Event::getType(size_t index) const
-{
-    return data[index].type;
-}
-
-std::string Event::getType() const
-{
-    std::string s;
-
-    for(std::vector<EventData>::const_iterator it = data.begin(); it != data.end(); ++it)
+    if(type != rhs.type) return false;
+    if(imap.size() != rhs.imap.size()) return false;
+    auto i1 = imap.cbegin();
+    auto i2 = rhs.imap.cbegin();
+    do
     {
-        s += it->type;
+        LOG(INFO) << "i1->first=" << i1->first << "\n";
+        LOG(INFO) << "i1->second=" << i1->second << "\n";
+        LOG(INFO) << "i2->first=" << i2->first << "\n";
+        LOG(INFO) << "i2->second=" << i2->second << "\n";
+        if(i1->first != i2->first || i1->second != i2->second) return false;
+        ++i1; ++i2;
     }
-
-    return s;
+    while(i1 != imap.cend() && i2 != rhs.imap.cend());
+    return true;
 }
 
-void Event::add(const EventData& e)
+bool Event::operator<(const Event& rhs) const
 {
-    data.push_back(e);
-}
-
-void Event::add(int i)
-{
-    EventData e;
-    e.type = 'i';
-    e.data.i = i;
-    data.push_back(e);
-}
-
-void Event::add(float f)
-{
-    EventData e;
-    e.type = 'f';
-    e.data.f = f;
-    data.push_back(e);
-}
-
-void Event::add(EventDataMIDI m)
-{
-    EventData e;
-    e.type = 'm';
-    e.data.m = m;
-    data.push_back(e);
-}
-
-void Event::remove(size_t index)
-{
-    data.erase(data.begin() + index);
-}
-
-void Event::set(size_t index, int i)
-{
-    data[index].type = 'i';
-    data[index].data.i = i;
-}
-
-void Event::set(size_t index, float f)
-{
-    data[index].type = 'f';
-    data[index].data.f = f;
-}
-
-void Event::set(size_t index, EventDataMIDI m)
-{
-    data[index].type = 'm';
-    data[index].data.m = m;
-}
-
-EventDataPayload Event::get(size_t index) const
-{
-    return data[index].data;
+    auto i1 = imap.find("key"), i2 = rhs.imap.find("key");
+    return i1->second < i2->second;
 }
 
 std::string Event::str() const
 {
-    std::stringstream ss;
-
-    ss << getType();
-
-    for(std::vector<EventData>::const_iterator it = data.begin(); it != data.end(); ++it)
-    {
-        ss << " ";
-        switch(it->type)
-        {
-        case 'i':
-            ss << it->data.i;
-            break;
-        case 'f':
-            ss << it->data.f;
-            break;
-        case 'm':
-            ss << it->data.m.port_id << ":" << it->data.m.status << ":" << it->data.m.data1 << ":" << it->data.m.data2;
-            break;
-        }
-    }
-
-    return ss.str();
+    std::ostringstream s;
+    s << "{type: " << type;
+    for(auto it = imap.cbegin(); it != imap.cend(); ++it)
+        s << ", " << it->first << ": " << it->second;
+    s << "}";
+    return s.str();
 }
+
+Event Event::Note(int note, int finetune, int length, int velocity)
+{
+    Event e;
+    e.type = "note";
+    e.imap["note"] = note;
+    e.imap["finetune"] = finetune;
+    e.imap["length"] = length;
+    e.imap["velocity"] = velocity;
+    e.imap["key"] = (note << 20) | (finetune << 10) | velocity;
+    return e;
+}
+
+Event Event::Param(int param, int value)
+{
+    Event e;
+    e.type = "param";
+    e.imap["param"] = param;
+    e.imap["value"] = value;
+    e.imap["key"] = (param << 16) | value;
+    return e;
+}
+
+std::string Event::getType() const
+{
+    return type;
+}
+
+int Event::getNote() const
+{
+    return imap.at("note");
+}
+
+int Event::getFinetune() const
+{
+    return imap.at("finetune");
+}
+
+int Event::getLength() const
+{
+    return imap.at("length");
+}
+
+int Event::getVelocity() const
+{
+    return imap.at("velocity");
+}
+
+int Event::getParam() const
+{
+    return imap.at("param");
+}
+
+int Event::getValue() const
+{
+    return imap.at("value");
+}
+
+std::ostream& operator<<(std::ostream& strm, const Event& e)
+{
+    return strm << e.str();
+}
+
