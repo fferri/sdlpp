@@ -28,6 +28,7 @@ public:
     void releaseMouse();
 
     virtual void onKeyboardEvent(SDL_KeyboardEvent& event);
+    virtual void onTextInputEvent(SDL_TextInputEvent& event);
     virtual void onMouseMotionEvent(SDL_MouseMotionEvent& event);
     virtual void onMouseButtonEvent(SDL_MouseButtonEvent& event);
     virtual void onMouseWheelEvent(SDL_MouseWheelEvent& event);

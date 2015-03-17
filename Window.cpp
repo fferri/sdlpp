@@ -85,6 +85,10 @@ void Window::onKeyboardEvent(SDL_KeyboardEvent& event)
 {
 }
 
+void Window::onTextInputEvent(SDL_TextInputEvent& event)
+{
+}
+
 void Window::onMouseMotionEvent(SDL_MouseMotionEvent& event)
 {
 }

@@ -75,6 +75,9 @@ void Application::dispatchEvent(SDL_Event& event)
     case SDL_KEYDOWN:
         onKeyboardEvent(event.key);
         break;
+    case SDL_TEXTINPUT:
+        onTextInputEvent(event.text);
+        break;
     case SDL_MOUSEMOTION:
         onMouseMotionEvent(event.motion);
         break;
@@ -148,6 +151,13 @@ void Application::onKeyboardEvent(SDL_KeyboardEvent& event)
     Window *win = Window::fromID(event.windowID);
     if(win)
         win->onKeyboardEvent(event);
+}
+
+void Application::onTextInputEvent(SDL_TextInputEvent& event)
+{
+    Window *win = Window::fromID(event.windowID);
+    if(win)
+        win->onTextInputEvent(event);
 }
 
 void Application::onMouseMotionEvent(SDL_MouseMotionEvent& event)
