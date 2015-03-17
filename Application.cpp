@@ -93,6 +93,12 @@ void Application::dispatchEvent(SDL_Event& event)
     case SDL_FINGERMOTION:
         onTouchFingerEvent(event.tfinger);
         break;
+    case SDL_MULTIGESTURE:
+        onMultiGestureEvent(event.mgesture);
+        break;
+    case SDL_DOLLARGESTURE:
+        onDollarGestureEvent(event.dgesture);
+        break;
     case SDL_QUIT:
         onQuitEvent(event.quit);
         break;
@@ -173,6 +179,14 @@ void Application::onWindowEvent(SDL_WindowEvent& event)
 }
 
 void Application::onTouchFingerEvent(SDL_TouchFingerEvent& event)
+{
+}
+
+void Application::onMultiGestureEvent(SDL_MultiGestureEvent& event)
+{
+}
+
+void Application::onDollarGestureEvent(SDL_DollarGestureEvent& event)
 {
 }
 
