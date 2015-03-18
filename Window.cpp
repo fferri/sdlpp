@@ -27,7 +27,7 @@ void Window::createAll(const char *title, int x, int y, int w, int h)
 
 void Window::createWindow(const char *title, int x, int y, int w, int h)
 {
-    window = SDL_CreateWindow(title, x, y, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+    window = SDL_CreateWindow(title, x, y, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_GRABBED | SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS | SDL_WINDOW_OPENGL);
 
     if(!window)
     {
