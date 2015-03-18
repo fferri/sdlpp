@@ -11,7 +11,6 @@ PartView::PartView(SDL_Rect rect, const PartModel& model)
       y_min(0.0f), y_max(127.0f), y_offset(0.0f),
       x_min(0), x_max(384), x_offset(0)
 {
-    paint();
 }
 
 void PartView::paint()

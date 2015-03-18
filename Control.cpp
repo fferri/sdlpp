@@ -7,7 +7,8 @@ Control::Control(SDL_Rect rect)
       grabbingMouseControl(NULL),
       underMouseControl(NULL),
       canvas(rect.w, rect.h),
-      needsRedraw(true)
+      needsRepaint(true),
+      needsRerender(true)
 {
 }
 
@@ -33,7 +34,7 @@ void Control::addChild(Control *control)
     }
 
     children.push_back(control);
-    redraw();
+    rerender();
 
     if(control->parent)
     {
@@ -57,7 +58,7 @@ void Control::removeChild(Control *control)
         if(*it == control)
         {
             it = children.erase(it);
-            redraw();
+            rerender();
         }
         else
         {
@@ -235,33 +236,41 @@ Surface& Control::getCanvas()
     return canvas;
 }
 
-bool Control::shouldRedraw()
+bool Control::shouldRerender()
 {
-    if(needsRedraw) return true;
+    if(shouldRepaint()) return true;
+
+    if(needsRerender) return true;
 
     for(Controls::iterator it = children.begin(); it != children.end(); ++it)
     {
-        if((*it)->shouldRedraw()) return true;
+        if((*it)->shouldRerender()) return true;
     }
 
     return false;
 }
 
-void Control::redraw()
+void Control::rerender()
 {
-    needsRedraw = true;
+    needsRerender = true;
 }
 
-void Control::resetRedrawFlag()
+void Control::resetRerenderFlag()
 {
-    needsRedraw = false;
+    needsRerender = false;
 }
 
 void Control::render(const Window& window)
 {
+    if(shouldRepaint())
+    {
+        paint();
+        resetRepaintFlag();
+    }
+
     SDL_Rect ar = getAbsoluteRect();
     canvas.render(window, ar.x, ar.y);
-    resetRedrawFlag();
+    resetRerenderFlag();
 
     renderChildren(window);
 }
@@ -272,5 +281,25 @@ void Control::renderChildren(const Window& window)
     {
         (*it)->render(window);
     }
+}
+
+bool Control::shouldRepaint()
+{
+    return needsRepaint;
+}
+
+void Control::repaint()
+{
+    needsRepaint = true;
+}
+
+void Control::resetRepaintFlag()
+{
+    needsRepaint = false;
+}
+
+void Control::paint()
+{
+    LOG(DEBUG) << "called\n";
 }
 

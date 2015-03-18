@@ -24,7 +24,7 @@ public:
 
     bool acceptsKeyboardFocus() const;
 
-    bool shouldRedraw();    
+    bool shouldRerender();    
 
     void render(const Window& window);
 

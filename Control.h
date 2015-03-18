@@ -24,7 +24,8 @@ private:
     Control *grabbingMouseControl;
     Control *underMouseControl;
 
-    bool needsRedraw;
+    bool needsRerender;
+    bool needsRepaint;
 
 protected:
     Surface canvas;
@@ -56,12 +57,18 @@ public:
 
     virtual Surface& getCanvas();
 
-    virtual bool shouldRedraw();
-    virtual void redraw();
-    virtual void resetRedrawFlag();
+    virtual bool shouldRerender();
+    virtual void rerender();
+    virtual void resetRerenderFlag();
 
     virtual void render(const Window& window);
     virtual void renderChildren(const Window& window);
+
+    virtual bool shouldRepaint();
+    virtual void repaint();
+    virtual void resetRepaintFlag();
+
+    virtual void paint();
 };
 
 #endif // CONTROL_H_INCLUDED

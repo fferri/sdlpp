@@ -33,19 +33,19 @@ void Viewport::set(double x, double y)
 {
     posX = (x < 0 ? 0 : (x > 1 ? 1 : x));
     posY = (y < 0 ? 0 : (y > 1 ? 1 : y));
-    redraw();
+    rerender();
 }
 
 void Viewport::setX(double x)
 {
     posX = (x < 0 ? 0 : (x > 1 ? 1 : x));
-    redraw();
+    rerender();
 }
 
 void Viewport::setY(double y)
 {
     posY = (y < 0 ? 0 : (y > 1 ? 1 : y));
-    redraw();
+    rerender();
 }
 
 bool Viewport::acceptsKeyboardFocus() const
@@ -53,20 +53,28 @@ bool Viewport::acceptsKeyboardFocus() const
     return child.acceptsKeyboardFocus();
 }
 
-bool Viewport::shouldRedraw()
+bool Viewport::shouldRerender()
 {
-    return Control::shouldRedraw() || child.shouldRedraw();
+    return Control::shouldRerender() || child.shouldRerender();
 }
 
 void Viewport::render(const Window& window)
 {
+    if(child.shouldRepaint())
+    {
+        child.paint();
+        child.resetRepaintFlag();
+    }
     Surface& childCanvas = child.getCanvas();
     SDL_Rect ar = getAbsoluteRect();
     int ox, oy;
     getTranslation(ox, oy);
     childCanvas.render(window, ox, oy, ar.w, ar.h, ar.x, ar.y, ar.w, ar.h);
-    resetRedrawFlag();
-    child.resetRedrawFlag();
+    LOG(DEBUG) << " -> childCanvas.render(" << &window << ", " << ox << ", " << oy << ", " << ar.w << ", " << ar.h << ", " << ar.x << ", " << ar.y << ", " << ar.w << ", " << ar.h << ")\n";
+    resetRerenderFlag();
+    resetRepaintFlag();
+    child.resetRerenderFlag();
+    child.resetRepaintFlag();
 }
 
 void Viewport::onKeyboardEvent(SDL_KeyboardEvent& event)

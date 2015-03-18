@@ -11,8 +11,6 @@ Button::Button(SDL_Rect rect, std::string text, const Font& font)
 {
     mouseDown = false;
     mouseHover = false;
-
-    paint();
 }
 
 Button::~Button()
@@ -52,8 +50,7 @@ void Button::onMouseButtonEvent(SDL_MouseButtonEvent& event)
         mouseDown = true;
         grabMouse();
         if(window) window->grabMouse();
-        paint();
-        redraw();
+        repaint();
     }
     if(event.type == SDL_MOUSEBUTTONUP && event.button == 1)
     {
@@ -63,8 +60,7 @@ void Button::onMouseButtonEvent(SDL_MouseButtonEvent& event)
         SDL_Rect ar = getAbsoluteRect();
         if(callback && event.x >= ar.x && event.y >= ar.y && event.x < (ar.x + ar.w) && event.y < (ar.y + ar.h))
             callback();
-        paint();
-        redraw();
+        repaint();
     }
 }
 
@@ -84,13 +80,11 @@ void Button::onWindowEvent(SDL_WindowEvent& event)
     {
     case SDL_WINDOWEVENT_ENTER:
         mouseHover = true;
-        paint();
-        redraw();
+        repaint();
         break;
     case SDL_WINDOWEVENT_LEAVE:
         mouseHover = false;
-        paint();
-        redraw();
+        repaint();
         break;
     }
 }

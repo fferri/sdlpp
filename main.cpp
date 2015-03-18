@@ -83,8 +83,7 @@ MainWindow::MainWindow()
     partModel.add(80, Event::Note(30, 0, 20, 100));
     partModel.add(100, Event::Note(35, 0, 10, 100));
     partModel.add(120, Event::Note(20, 0, 40, 100));
-    partView.paint();
-    partView.redraw();
+    partView.repaint();
 
     //timer.start(50);
 
@@ -108,7 +107,7 @@ void MainWindow::removeButton()
 
 void MainWindow::draw()
 {
-    if(root.shouldRedraw()) {
+    if(root.shouldRerender()) {
         clear();
         root.render(*this);
         swapBuffer();

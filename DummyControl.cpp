@@ -1,4 +1,5 @@
 #include "DummyControl.h"
+#include "Logger.h"
 
 const SDL_Color gray1 = {127, 127, 127, 255};
 const SDL_Color gray2 = {190, 190, 190, 255};
@@ -12,8 +13,6 @@ DummyControl::DummyControl(SDL_Rect rect)
     checkerboardPattern.fill(gray1);
     checkerboardPattern.fillRect(0, 0, dim, dim, gray2);
     checkerboardPattern.fillRect(dim, dim, dim, dim, gray2);
-
-    paint();
 }
 
 DummyControl::~DummyControl()
@@ -22,6 +21,7 @@ DummyControl::~DummyControl()
 
 void DummyControl::paint()
 {
+    LOG(DEBUG) << "called\n";
     canvas.fill(checkerboardPattern);
     canvas.drawLine(0, 0, canvas.getWidth() - 1, canvas.getHeight() - 1, black);
 }

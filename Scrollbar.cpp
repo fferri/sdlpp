@@ -11,8 +11,6 @@ Scrollbar::Scrollbar(SDL_Rect rect)
     pos = 0.0;
     mouseDown = false;
     mouseHover = false;
-
-    paint();
 }
 
 Scrollbar::~Scrollbar()
@@ -67,7 +65,7 @@ bool Scrollbar::acceptsKeyboardFocus() const
 void Scrollbar::setContentSize(int sz)
 {
     contentSize = sz;
-    paint();
+    repaint();
 }
 
 void Scrollbar::setPos(double p)
@@ -75,7 +73,7 @@ void Scrollbar::setPos(double p)
     if(p > 1.0) pos = 1.0;
     else if(p < 0.0) pos = 0.0;
     else pos = p;
-    paint();
+    repaint();
     callback(pos);
 }
 
@@ -131,13 +129,11 @@ void Scrollbar::onWindowEvent(SDL_WindowEvent& event)
     {
     case SDL_WINDOWEVENT_ENTER:
         mouseHover = true;
-        paint();
-        redraw();
+        repaint();
         break;
     case SDL_WINDOWEVENT_LEAVE:
         mouseHover = false;
-        paint();
-        redraw();
+        repaint();
         break;
     }
 }
