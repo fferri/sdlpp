@@ -70,7 +70,6 @@ void Viewport::render(const Window& window)
     int ox, oy;
     getTranslation(ox, oy);
     childCanvas.render(window, ox, oy, ar.w, ar.h, ar.x, ar.y, ar.w, ar.h);
-    LOG(DEBUG) << " -> childCanvas.render(" << &window << ", " << ox << ", " << oy << ", " << ar.w << ", " << ar.h << ", " << ar.x << ", " << ar.y << ", " << ar.w << ", " << ar.h << ")\n";
     resetRerenderFlag();
     resetRepaintFlag();
     child.resetRerenderFlag();
