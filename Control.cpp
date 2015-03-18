@@ -212,6 +212,7 @@ void Control::setRect(SDL_Rect newRect)
 {
     canvas.resize(newRect.w, newRect.h, true);
     rect = newRect;
+    repaint();
 }
 
 const SDL_Rect& Control::getRect()

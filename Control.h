@@ -51,7 +51,7 @@ public:
     virtual void onMouseWheelEvent(SDL_MouseWheelEvent& event);
     virtual void onWindowEvent(SDL_WindowEvent& event);
 
-    void setRect(SDL_Rect newRect);
+    virtual void setRect(SDL_Rect newRect);
     const SDL_Rect& getRect();
     virtual SDL_Rect getAbsoluteRect();
 
