@@ -10,13 +10,21 @@
 
 class Scrollbar : public Control
 {
+public:
+    enum UIPart
+    {
+        None,
+        Upper,
+        Handle,
+        Lower
+    };
 protected:
     SDL_Color bg, fg, fo;
 
     int contentSize;
     double pos;
-    bool mouseDown;
-    bool mouseHover;
+    UIPart mouseDown;
+    UIPart mouseHover;
 
     int getHandleSize();
     int getHandlePos();
@@ -28,6 +36,8 @@ protected:
 public:
     Scrollbar(SDL_Rect rect);
     virtual ~Scrollbar();
+
+    UIPart partAt(int x, int y);
 
     void paint();
 
