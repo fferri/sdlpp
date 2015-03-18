@@ -13,6 +13,34 @@ PartView::PartView(SDL_Rect rect, const PartModel& model)
 {
 }
 
+int PartView::localToScreenX(float localX)
+{
+    const SDL_Rect& r = getRect();
+    float localNX = (localX + x_offset - x_min) / (x_max - x_min);
+    return int(r.w * localNX + 0.5);
+}
+
+int PartView::localToScreenY(float localY)
+{
+    const SDL_Rect& r = getRect();
+    float localNY = (localY + y_offset - y_min) / (y_max - y_min);
+    return int(r.h * localNY + 0.5);
+}
+
+float PartView::screenToLocalX(int screenX)
+{
+    const SDL_Rect& r = getRect();
+    float screenNX = screenX / float(r.w);
+    return screenNX * (x_max - x_min) + x_min - x_offset;
+}
+
+float PartView::screenToLocalY(int screenY)
+{
+    const SDL_Rect& r = getRect();
+    float screenNY = screenY / float(r.h);
+    return screenNY * (y_max - y_min) + y_min - y_offset;
+}
+
 void PartView::paint()
 {
     canvas.fill(bg_color);
@@ -22,19 +50,14 @@ void PartView::paint()
         TimeStamp timestamp = it->first;
         const Event& event = it->second;
         if(event.getType() != "note") continue;
-        SDL_Rect n, r;
-        n.x = timestamp + x_offset;
-        n.y = event.getNote() + event.getFinetune() / 127.0 + y_offset;
-        if(n.x < x_min || n.x > x_max) continue;
-        if(n.y < y_min || n.y > y_max) continue;
-        r = getRect();
+        SDL_Rect n;
+        float lx = timestamp, ly = event.getNote() + event.getFinetune() / 127.0;
+        n.x = localToScreenX(lx);
+        n.y = localToScreenY(ly);
         // scale to screen
-        n.x = (n.x - x_min) * r.w / (x_max - x_min);
-        n.y = (n.y - y_min) * r.h / (y_max - y_min);
-        n.w = event.getLength() * r.w / (x_max - x_min);
-        if(n.w < 1) n.w = 1;
-        n.h = r.h / (y_max - y_min);
-        if(n.h < 1) n.h = 1;
+        n.w = localToScreenX(lx + event.getLength()) - n.x;
+        n.h = localToScreenY(1) - localToScreenY(0);
+        n.y -= 0.5 * n.h;
         canvas.drawRect(n.x, n.y, n.w, n.h, fg_lines);
     }
 }

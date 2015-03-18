@@ -13,6 +13,11 @@ private:
     float y_min, y_max, y_offset;
     TimeStamp x_min, x_max, x_offset;
 
+    int localToScreenX(float localX);
+    int localToScreenY(float localY);
+    float screenToLocalX(int screenX);
+    float screenToLocalY(int screenY);
+
 public:
     PartView(SDL_Rect rect, const PartModel& model);
     void paint();
