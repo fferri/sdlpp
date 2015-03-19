@@ -62,6 +62,8 @@ public:
     void onMouseButtonEvent(SDL_MouseButtonEvent event);
     void onKeyboardEvent(SDL_KeyboardEvent event);
     void onWindowEvent(SDL_WindowEvent event);
+
+    void onResize(int w, int h);
 };
 
 #endif // SCROLLBAR_H_INCLUDED

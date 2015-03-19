@@ -179,3 +179,9 @@ void Scrollbar::onWindowEvent(SDL_WindowEvent event)
     }
 }
 
+void Scrollbar::onResize(int w, int h)
+{
+    computeAllMetrics();
+    repaint();
+}
+
