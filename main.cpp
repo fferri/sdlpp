@@ -33,7 +33,7 @@ private:
     PartModel partModel;
     PartView partView;
 
-    void removeButton();
+    void buttonCallback();
 
 public:
     MainWindow();
@@ -87,7 +87,7 @@ MainWindow::MainWindow()
 
     //timer.start(50);
 
-    button.setCallback(boost::bind(&MainWindow::removeButton, this));
+    button.setCallback(boost::bind(&MainWindow::buttonCallback, this));
 
     scrollh.setContentSize(dummy.getRect().w);
     scrollv.setContentSize(dummy.getRect().h);
@@ -100,7 +100,7 @@ MainWindow::~MainWindow()
 {
 }
 
-void MainWindow::removeButton()
+void MainWindow::buttonCallback()
 {
     root.removeChild(&button);
 }
