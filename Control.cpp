@@ -238,7 +238,7 @@ void Control::setRect(SDL_Rect newRect)
     if(oldRect.x != newRect.x || oldRect.y != newRect.y)
         onMove(newRect.x, newRect.y);
     if(oldRect.w != newRect.w || oldRect.h != newRect.h)
-        onMove(newRect.w, newRect.h);
+        onResize(newRect.w, newRect.h);
     repaint();
 }
 
