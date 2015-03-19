@@ -6,47 +6,49 @@ Scrollbar::Scrollbar(SDL_Rect rect)
       bg({30, 40, 0, 255}),
       fg({30, 140, 200, 255}),
       fo({230, 240, 240, 255}),
-      contentSize(0),
+      contentSize(1),
       pos(0.0),
       mouseDown(None),
       mouseHover(None)
 {
+    computeAllMetrics();
 }
 
 Scrollbar::~Scrollbar()
 {
 }
 
-int Scrollbar::getHandleSize()
+void Scrollbar::computeAllMetrics()
 {
-    int h = getLongSize();
-    if(contentSize <= h) return h;
-    else return h * h / contentSize;
+    computeSizeAndOrientation();
 }
 
-int Scrollbar::getHandlePos()
-{
-    return int((getLongSize() - getHandleSize()) * pos);
-}
-
-int Scrollbar::getLongSize()
+void Scrollbar::computeSizeAndOrientation()
 {
     const SDL_Rect& r = getRect();
-    return std::max(r.w, r.h);
+    horizontal = r.w > r.h;
+    longSize = horizontal ? r.w : r.h;
+    computeHandleSize();
 }
 
-bool Scrollbar::isHorizontal()
+void Scrollbar::computeHandlePos()
 {
-    const SDL_Rect& r = getRect();
-    return r.w > r.h;
+    handlePos = int((longSize - handleSize) * pos);
+}
+
+void Scrollbar::computeHandleSize()
+{
+    handleSize = longSize * longSize / contentSize;
+    if(handleSize > longSize)
+        handleSize = longSize;
+    computeHandlePos();
 }
 
 Scrollbar::UIPart Scrollbar::partAt(int x, int y)
 {
-    const SDL_Rect& r = getRect();
-    int hp = getHandlePos(), hs = getHandleSize(), ss = r.w, ls = r.h;
+    int ss = getWidth(), ls = getHeight();
 
-    if(isHorizontal())
+    if(horizontal)
     {
         std::swap(x, y);
         std::swap(ss, ls);
@@ -54,8 +56,8 @@ Scrollbar::UIPart Scrollbar::partAt(int x, int y)
 
     if(x < 0 || x >= ss) return None;
     if(y < 0) return None;
-    if(y < hp) return Upper;
-    if(y < (hp + hs)) return Handle;
+    if(y < handlePos) return Upper;
+    if(y < (handlePos + handleSize)) return Handle;
     if(y < ls) return Lower;
     return None;
 }
@@ -66,10 +68,12 @@ void Scrollbar::paint()
 
     canvas.fill(bg);
 
-    int p = getHandlePos(), sz = getHandleSize();
-
-    bool h = isHorizontal();
-    SDL_Rect hr = {h ? p : 0, h ? 0 : p, h ? sz : r.w, h ? r.h : sz};
+    SDL_Rect hr = {
+        horizontal ? handlePos : 0,
+        horizontal ? 0 : handlePos,
+        horizontal ? handleSize : r.w,
+        horizontal ? r.h : handleSize
+    };
     canvas.fillRect(hr.x, hr.y, hr.w, hr.h, mouseDown == Handle ? fo : fg);
 
     if(mouseHover == Handle)
@@ -84,6 +88,7 @@ bool Scrollbar::acceptsKeyboardFocus() const
 void Scrollbar::setContentSize(int sz)
 {
     contentSize = sz;
+    computeHandleSize();
     repaint();
 }
 
@@ -92,6 +97,7 @@ void Scrollbar::setPos(double p)
     if(p > 1.0) pos = 1.0;
     else if(p < 0.0) pos = 0.0;
     else pos = p;
+    computeHandlePos();
     repaint();
     callback(pos);
 }
@@ -112,8 +118,8 @@ void Scrollbar::onMouseMotionEvent(SDL_MouseMotionEvent event)
 
     if(mouseDown != Handle) return;
 
-    double incr = 1.0 / double(getLongSize() - getHandleSize());
-    setPos(pos + (isHorizontal() ? event.xrel : event.yrel) * incr);
+    double incr = 1.0 / double(longSize - handleSize);
+    setPos(pos + (horizontal ? event.xrel : event.yrel) * incr);
 }
 
 void Scrollbar::onMouseButtonEvent(SDL_MouseButtonEvent event)

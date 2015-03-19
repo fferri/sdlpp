@@ -21,16 +21,26 @@ public:
 protected:
     SDL_Color bg, fg, fo;
 
+    // UI metrics:
+    bool horizontal;
+    int handleSize;
+    int handlePos;
+    int longSize;
+
+    void computeAllMetrics();
+    void computeSizeAndOrientation();
+    void computeHandlePos();
+    void computeHandleSize();
+
+    // state variables:
     int contentSize;
     double pos;
+
+    // mouse state variables:
     UIPart mouseDown;
     UIPart mouseHover;
 
-    int getHandleSize();
-    int getHandlePos();
-    int getLongSize();
-    bool isHorizontal();
-
+    // click callback:
     boost::function<void(double)> callback;
 
 public:
