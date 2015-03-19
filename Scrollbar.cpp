@@ -40,10 +40,10 @@ void Scrollbar::computeHandlePos()
 void Scrollbar::computeHandleSize()
 {
     handleSize = longSize * longSize / contentSize;
-    if(handleSize > longSize)
-        handleSize = longSize;
     if(handleSize < shortSize)
         handleSize = shortSize;
+    if(handleSize > longSize)
+        handleSize = longSize;
     computeHandlePos();
 }
 
