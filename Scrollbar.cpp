@@ -28,6 +28,7 @@ void Scrollbar::computeSizeAndOrientation()
     const SDL_Rect& r = getRect();
     horizontal = r.w > r.h;
     longSize = horizontal ? r.w : r.h;
+    shortSize = horizontal ? r.h : r.w;
     computeHandleSize();
 }
 
@@ -41,6 +42,8 @@ void Scrollbar::computeHandleSize()
     handleSize = longSize * longSize / contentSize;
     if(handleSize > longSize)
         handleSize = longSize;
+    if(handleSize < shortSize)
+        handleSize = shortSize;
     computeHandlePos();
 }
 

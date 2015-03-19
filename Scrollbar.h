@@ -26,6 +26,7 @@ protected:
     int handleSize;
     int handlePos;
     int longSize;
+    int shortSize;
 
     void computeAllMetrics();
     void computeSizeAndOrientation();
