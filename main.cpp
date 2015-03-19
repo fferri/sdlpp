@@ -73,9 +73,9 @@ MainWindow::MainWindow()
       partModel("name", "type"),
       partView({40, 80, 400, 300}, partModel)
 {
+    root.addChild(&viewport);
     root.addChild(&scrollh);
     root.addChild(&scrollv);
-    root.addChild(&viewport);
     root.addChild(&button);
     root.addChild(&partView);
 
