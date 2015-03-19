@@ -57,8 +57,7 @@ void Button::onMouseButtonEvent(SDL_MouseButtonEvent event)
         mouseDown = false;
         releaseMouse();
         if(window) window->releaseMouse();
-        SDL_Rect ar = getAbsoluteRect();
-        if(callback && event.x >= ar.x && event.y >= ar.y && event.x < (ar.x + ar.w) && event.y < (ar.y + ar.h))
+        if(callback && event.x >= 0 && event.y >= 0 && event.x < getWidth() && event.y < getHeight())
             callback();
         repaint();
     }

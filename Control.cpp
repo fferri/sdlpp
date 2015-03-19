@@ -146,13 +146,22 @@ void Control::onKeyboardEvent(SDL_KeyboardEvent event)
 {
 }
 
+template <typename T>
+void Control::translateMouseEventCoords(T& mouseEvent)
+{
+    mouseEvent.x -= rect.x;
+    mouseEvent.y -= rect.y;
+}
+
 void Control::onMouseMotionEvent(SDL_MouseMotionEvent event)
 {
     if(grabbingMouseControl)
     {
+        grabbingMouseControl->translateMouseEventCoords(event);
         grabbingMouseControl->onMouseMotionEvent(event);
         return;
     }
+
     Control *c = childAt(event.x, event.y);
     if(c != underMouseControl)
     {
@@ -178,19 +187,32 @@ void Control::onMouseMotionEvent(SDL_MouseMotionEvent event)
 
         underMouseControl = c;
     }
-    if(c) c->onMouseMotionEvent(event);
+
+    if(c)
+    {
+        c->translateMouseEventCoords(event);
+        c->onMouseMotionEvent(event);
+    }
 }
 
 void Control::onMouseButtonEvent(SDL_MouseButtonEvent event)
 {
     Control *c = grabbingMouseControl ? grabbingMouseControl : childAt(event.x, event.y);
-    if(c) c->onMouseButtonEvent(event);
+    if(c)
+    {
+        c->translateMouseEventCoords(event);
+        c->onMouseButtonEvent(event);
+    }
 }
 
 void Control::onMouseWheelEvent(SDL_MouseWheelEvent event)
 {
     Control *c = grabbingMouseControl ? grabbingMouseControl : childAt(event.x, event.y);
-    if(c) c->onMouseWheelEvent(event);
+    if(c)
+    {
+        c->translateMouseEventCoords(event);
+        c->onMouseWheelEvent(event);
+    }
 }
 
 void Control::onWindowEvent(SDL_WindowEvent event)
@@ -218,6 +240,26 @@ void Control::setRect(SDL_Rect newRect)
 const SDL_Rect& Control::getRect()
 {
     return rect;
+}
+
+int Control::getX()
+{
+    return rect.x;
+}
+
+int Control::getY()
+{
+    return rect.y;
+}
+
+int Control::getWidth()
+{
+    return rect.w;
+}
+
+int Control::getHeight()
+{
+    return rect.h;
 }
 
 SDL_Rect Control::getAbsoluteRect()

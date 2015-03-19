@@ -103,9 +103,8 @@ void Scrollbar::setCallback(boost::function<void(double)> f)
 
 void Scrollbar::onMouseMotionEvent(SDL_MouseMotionEvent event)
 {
-    const SDL_Rect& r = getRect();
     UIPart oldMouseHover = mouseHover;
-    mouseHover = partAt(event.x - r.x, event.y - r.y);
+    mouseHover = partAt(event.x, event.y);
     if(oldMouseHover != mouseHover)
     {
         repaint();
@@ -125,8 +124,7 @@ void Scrollbar::onMouseButtonEvent(SDL_MouseButtonEvent event)
 
     if(event.type == SDL_MOUSEBUTTONDOWN && event.button == 1)
     {
-        const SDL_Rect& r = getRect();
-        mouseDown = partAt(event.x - r.x, event.y - r.y);
+        mouseDown = partAt(event.x, event.y);
         if(mouseDown == Handle)
         {
             grabMouse();

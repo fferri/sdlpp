@@ -54,6 +54,13 @@ public:
     virtual void setRect(SDL_Rect newRect);
     const SDL_Rect& getRect();
     virtual SDL_Rect getAbsoluteRect();
+    template <typename T>
+    void translateMouseEventCoords(T& mouseEvent);
+    int getX();
+    int getY();
+    int getWidth();
+    int getHeight();
+
 
     virtual Surface& getCanvas();
 
