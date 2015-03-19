@@ -142,70 +142,70 @@ long Application::ticks()
     return SDL_GetTicks();
 }
 
-void Application::onDropEvent(SDL_DropEvent& event)
+void Application::onDropEvent(SDL_DropEvent event)
 {
 }
 
-void Application::onKeyboardEvent(SDL_KeyboardEvent& event)
+void Application::onKeyboardEvent(SDL_KeyboardEvent event)
 {
     Window *win = Window::fromID(event.windowID);
     if(win)
         win->onKeyboardEvent(event);
 }
 
-void Application::onTextInputEvent(SDL_TextInputEvent& event)
+void Application::onTextInputEvent(SDL_TextInputEvent event)
 {
     Window *win = Window::fromID(event.windowID);
     if(win)
         win->onTextInputEvent(event);
 }
 
-void Application::onMouseMotionEvent(SDL_MouseMotionEvent& event)
+void Application::onMouseMotionEvent(SDL_MouseMotionEvent event)
 {
     Window *win = Window::fromID(event.windowID);
     if(win)
         win->onMouseMotionEvent(event);
 }
 
-void Application::onMouseButtonEvent(SDL_MouseButtonEvent& event)
+void Application::onMouseButtonEvent(SDL_MouseButtonEvent event)
 {
     Window *win = Window::fromID(event.windowID);
     if(win)
         win->onMouseButtonEvent(event);
 }
 
-void Application::onMouseWheelEvent(SDL_MouseWheelEvent& event)
+void Application::onMouseWheelEvent(SDL_MouseWheelEvent event)
 {
     Window *win = Window::fromID(event.windowID);
     if(win)
         win->onMouseWheelEvent(event);
 }
 
-void Application::onWindowEvent(SDL_WindowEvent& event)
+void Application::onWindowEvent(SDL_WindowEvent event)
 {
     Window *win = Window::fromID(event.windowID);
     if(win)
         win->onWindowEvent(event);
 }
 
-void Application::onTouchFingerEvent(SDL_TouchFingerEvent& event)
+void Application::onTouchFingerEvent(SDL_TouchFingerEvent event)
 {
 }
 
-void Application::onMultiGestureEvent(SDL_MultiGestureEvent& event)
+void Application::onMultiGestureEvent(SDL_MultiGestureEvent event)
 {
 }
 
-void Application::onDollarGestureEvent(SDL_DollarGestureEvent& event)
+void Application::onDollarGestureEvent(SDL_DollarGestureEvent event)
 {
 }
 
-void Application::onQuitEvent(SDL_QuitEvent& event)
+void Application::onQuitEvent(SDL_QuitEvent event)
 {
     requestShutdown();
 }
 
-void Application::onUserEvent(SDL_UserEvent& event)
+void Application::onUserEvent(SDL_UserEvent event)
 {
     LOG(TRACE) << "Application::onUserEvent({timestamp=" << event.timestamp << ", windowID=" << event.windowID << ", code=" << event.code << ", data1=" << event.data1 << ", data2=" << event.data2 << "})\n";
 
@@ -214,7 +214,7 @@ void Application::onUserEvent(SDL_UserEvent& event)
         win->onUserEvent(event);
 }
 
-void Application::pushUserEvent(SDL_UserEvent& event)
+void Application::pushUserEvent(SDL_UserEvent event)
 {
     LOG(TRACE) << "Application::pushUserEvent({type=" << event.type << "})\n";
 

@@ -142,11 +142,11 @@ bool Control::acceptsKeyboardFocus() const
     return false;
 }
 
-void Control::onKeyboardEvent(SDL_KeyboardEvent& event)
+void Control::onKeyboardEvent(SDL_KeyboardEvent event)
 {
 }
 
-void Control::onMouseMotionEvent(SDL_MouseMotionEvent& event)
+void Control::onMouseMotionEvent(SDL_MouseMotionEvent event)
 {
     if(grabbingMouseControl)
     {
@@ -181,19 +181,19 @@ void Control::onMouseMotionEvent(SDL_MouseMotionEvent& event)
     if(c) c->onMouseMotionEvent(event);
 }
 
-void Control::onMouseButtonEvent(SDL_MouseButtonEvent& event)
+void Control::onMouseButtonEvent(SDL_MouseButtonEvent event)
 {
     Control *c = grabbingMouseControl ? grabbingMouseControl : childAt(event.x, event.y);
     if(c) c->onMouseButtonEvent(event);
 }
 
-void Control::onMouseWheelEvent(SDL_MouseWheelEvent& event)
+void Control::onMouseWheelEvent(SDL_MouseWheelEvent event)
 {
     Control *c = grabbingMouseControl ? grabbingMouseControl : childAt(event.x, event.y);
     if(c) c->onMouseWheelEvent(event);
 }
 
-void Control::onWindowEvent(SDL_WindowEvent& event)
+void Control::onWindowEvent(SDL_WindowEvent event)
 {
     if(underMouseControl && event.event == SDL_WINDOWEVENT_LEAVE)
     {

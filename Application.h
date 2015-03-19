@@ -31,20 +31,20 @@ public:
 
     long ticks();
 
-    virtual void onDropEvent(SDL_DropEvent& event);
-    virtual void onKeyboardEvent(SDL_KeyboardEvent& event);
-    virtual void onTextInputEvent(SDL_TextInputEvent& event);
-    virtual void onMouseMotionEvent(SDL_MouseMotionEvent& event);
-    virtual void onMouseButtonEvent(SDL_MouseButtonEvent& event);
-    virtual void onMouseWheelEvent(SDL_MouseWheelEvent& event);
-    virtual void onWindowEvent(SDL_WindowEvent& event);
-    virtual void onTouchFingerEvent(SDL_TouchFingerEvent& event);
-    virtual void onMultiGestureEvent(SDL_MultiGestureEvent& event);
-    virtual void onDollarGestureEvent(SDL_DollarGestureEvent& event);
-    virtual void onQuitEvent(SDL_QuitEvent& event);
-    virtual void onUserEvent(SDL_UserEvent& event);
+    virtual void onDropEvent(SDL_DropEvent event);
+    virtual void onKeyboardEvent(SDL_KeyboardEvent event);
+    virtual void onTextInputEvent(SDL_TextInputEvent event);
+    virtual void onMouseMotionEvent(SDL_MouseMotionEvent event);
+    virtual void onMouseButtonEvent(SDL_MouseButtonEvent event);
+    virtual void onMouseWheelEvent(SDL_MouseWheelEvent event);
+    virtual void onWindowEvent(SDL_WindowEvent event);
+    virtual void onTouchFingerEvent(SDL_TouchFingerEvent event);
+    virtual void onMultiGestureEvent(SDL_MultiGestureEvent event);
+    virtual void onDollarGestureEvent(SDL_DollarGestureEvent event);
+    virtual void onQuitEvent(SDL_QuitEvent event);
+    virtual void onUserEvent(SDL_UserEvent event);
 
-    void pushUserEvent(SDL_UserEvent& event);
+    void pushUserEvent(SDL_UserEvent event);
 
     Uint32 getEventTypeTimer();
 

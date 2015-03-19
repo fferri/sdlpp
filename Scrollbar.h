@@ -48,10 +48,10 @@ public:
 
     void setCallback(boost::function<void(double)> f);
 
-    void onMouseMotionEvent(SDL_MouseMotionEvent& event);
-    void onMouseButtonEvent(SDL_MouseButtonEvent& event);
-    void onKeyboardEvent(SDL_KeyboardEvent& event);
-    void onWindowEvent(SDL_WindowEvent& event);
+    void onMouseMotionEvent(SDL_MouseMotionEvent event);
+    void onMouseButtonEvent(SDL_MouseButtonEvent event);
+    void onKeyboardEvent(SDL_KeyboardEvent event);
+    void onWindowEvent(SDL_WindowEvent event);
 };
 
 #endif // SCROLLBAR_H_INCLUDED

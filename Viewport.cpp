@@ -76,24 +76,24 @@ void Viewport::render(const Window& window)
     child.resetRepaintFlag();
 }
 
-void Viewport::onKeyboardEvent(SDL_KeyboardEvent& event)
+void Viewport::onKeyboardEvent(SDL_KeyboardEvent event)
 {
     child.onKeyboardEvent(event);
 }
 
-void Viewport::onMouseMotionEvent(SDL_MouseMotionEvent& event)
+void Viewport::onMouseMotionEvent(SDL_MouseMotionEvent event)
 {
     translateMouseEvent(event);
     child.onMouseMotionEvent(event);
 }
 
-void Viewport::onMouseButtonEvent(SDL_MouseButtonEvent& event)
+void Viewport::onMouseButtonEvent(SDL_MouseButtonEvent event)
 {
     translateMouseEvent(event);
     child.onMouseButtonEvent(event);
 }
 
-void Viewport::onMouseWheelEvent(SDL_MouseWheelEvent& event)
+void Viewport::onMouseWheelEvent(SDL_MouseWheelEvent event)
 {
     translateMouseEvent(event);
     child.onMouseWheelEvent(event);

@@ -81,31 +81,31 @@ void Window::releaseMouse()
     SDL_SetWindowGrab(window, SDL_FALSE);
 }
 
-void Window::onKeyboardEvent(SDL_KeyboardEvent& event)
+void Window::onKeyboardEvent(SDL_KeyboardEvent event)
 {
 }
 
-void Window::onTextInputEvent(SDL_TextInputEvent& event)
+void Window::onTextInputEvent(SDL_TextInputEvent event)
 {
 }
 
-void Window::onMouseMotionEvent(SDL_MouseMotionEvent& event)
+void Window::onMouseMotionEvent(SDL_MouseMotionEvent event)
 {
 }
 
-void Window::onMouseButtonEvent(SDL_MouseButtonEvent& event)
+void Window::onMouseButtonEvent(SDL_MouseButtonEvent event)
 {
 }
 
-void Window::onMouseWheelEvent(SDL_MouseWheelEvent& event)
+void Window::onMouseWheelEvent(SDL_MouseWheelEvent event)
 {
 }
 
-void Window::onWindowEvent(SDL_WindowEvent& event)
+void Window::onWindowEvent(SDL_WindowEvent event)
 {
 }
 
-void Window::onUserEvent(SDL_UserEvent& event)
+void Window::onUserEvent(SDL_UserEvent event)
 {
 }
 

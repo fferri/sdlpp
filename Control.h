@@ -45,11 +45,11 @@ public:
 
     virtual bool acceptsKeyboardFocus() const;
 
-    virtual void onKeyboardEvent(SDL_KeyboardEvent& event);
-    virtual void onMouseMotionEvent(SDL_MouseMotionEvent& event);
-    virtual void onMouseButtonEvent(SDL_MouseButtonEvent& event);
-    virtual void onMouseWheelEvent(SDL_MouseWheelEvent& event);
-    virtual void onWindowEvent(SDL_WindowEvent& event);
+    virtual void onKeyboardEvent(SDL_KeyboardEvent event);
+    virtual void onMouseMotionEvent(SDL_MouseMotionEvent event);
+    virtual void onMouseButtonEvent(SDL_MouseButtonEvent event);
+    virtual void onMouseWheelEvent(SDL_MouseWheelEvent event);
+    virtual void onWindowEvent(SDL_WindowEvent event);
 
     virtual void setRect(SDL_Rect newRect);
     const SDL_Rect& getRect();

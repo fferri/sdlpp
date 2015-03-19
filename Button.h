@@ -32,9 +32,9 @@ public:
 
     void setCallback(boost::function<void(void)> f);
 
-    void onMouseButtonEvent(SDL_MouseButtonEvent& event);
-    void onKeyboardEvent(SDL_KeyboardEvent& event);
-    void onWindowEvent(SDL_WindowEvent& event);
+    void onMouseButtonEvent(SDL_MouseButtonEvent event);
+    void onKeyboardEvent(SDL_KeyboardEvent event);
+    void onWindowEvent(SDL_WindowEvent event);
 };
 
 #endif // BUTTON_H_INCLUDED

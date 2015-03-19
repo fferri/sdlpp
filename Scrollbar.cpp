@@ -101,7 +101,7 @@ void Scrollbar::setCallback(boost::function<void(double)> f)
     callback = f;
 }
 
-void Scrollbar::onMouseMotionEvent(SDL_MouseMotionEvent& event)
+void Scrollbar::onMouseMotionEvent(SDL_MouseMotionEvent event)
 {
     const SDL_Rect& r = getRect();
     UIPart oldMouseHover = mouseHover;
@@ -117,7 +117,7 @@ void Scrollbar::onMouseMotionEvent(SDL_MouseMotionEvent& event)
     setPos(pos + (isHorizontal() ? event.xrel : event.yrel) * incr);
 }
 
-void Scrollbar::onMouseButtonEvent(SDL_MouseButtonEvent& event)
+void Scrollbar::onMouseButtonEvent(SDL_MouseButtonEvent event)
 {
     Window *window = Window::fromID(event.windowID);
 
@@ -146,7 +146,7 @@ void Scrollbar::onMouseButtonEvent(SDL_MouseButtonEvent& event)
     }
 }
 
-void Scrollbar::onKeyboardEvent(SDL_KeyboardEvent& event)
+void Scrollbar::onKeyboardEvent(SDL_KeyboardEvent event)
 {
     if(event.type == SDL_KEYDOWN)
     {
@@ -162,7 +162,7 @@ void Scrollbar::onKeyboardEvent(SDL_KeyboardEvent& event)
     }
 }
 
-void Scrollbar::onWindowEvent(SDL_WindowEvent& event)
+void Scrollbar::onWindowEvent(SDL_WindowEvent event)
 {
     switch(event.event)
     {

@@ -41,7 +41,7 @@ void Button::setCallback(boost::function<void(void)> f)
     callback = f;
 }
 
-void Button::onMouseButtonEvent(SDL_MouseButtonEvent& event)
+void Button::onMouseButtonEvent(SDL_MouseButtonEvent event)
 {
     Window *window = Window::fromID(event.windowID);
 
@@ -64,7 +64,7 @@ void Button::onMouseButtonEvent(SDL_MouseButtonEvent& event)
     }
 }
 
-void Button::onKeyboardEvent(SDL_KeyboardEvent& event)
+void Button::onKeyboardEvent(SDL_KeyboardEvent event)
 {
     if(event.type == SDL_KEYDOWN)
     {
@@ -74,7 +74,7 @@ void Button::onKeyboardEvent(SDL_KeyboardEvent& event)
     }
 }
 
-void Button::onWindowEvent(SDL_WindowEvent& event)
+void Button::onWindowEvent(SDL_WindowEvent event)
 {
     switch(event.event)
     {

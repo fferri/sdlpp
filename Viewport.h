@@ -28,10 +28,10 @@ public:
 
     void render(const Window& window);
 
-    void onKeyboardEvent(SDL_KeyboardEvent& event);
-    void onMouseMotionEvent(SDL_MouseMotionEvent& event);
-    void onMouseButtonEvent(SDL_MouseButtonEvent& event);
-    void onMouseWheelEvent(SDL_MouseWheelEvent& event);
+    void onKeyboardEvent(SDL_KeyboardEvent event);
+    void onMouseMotionEvent(SDL_MouseMotionEvent event);
+    void onMouseButtonEvent(SDL_MouseButtonEvent event);
+    void onMouseWheelEvent(SDL_MouseWheelEvent event);
 };
 
 #endif // VIEWPORT_H_INCLUDED

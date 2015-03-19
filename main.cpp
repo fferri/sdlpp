@@ -41,12 +41,12 @@ public:
 
     void draw();
 
-    void onKeyboardEvent(SDL_KeyboardEvent& event);
-    void onMouseMotionEvent(SDL_MouseMotionEvent& event);
-    void onMouseButtonEvent(SDL_MouseButtonEvent& event);
-    void onMouseWheelEvent(SDL_MouseWheelEvent& event);
-    void onWindowEvent(SDL_WindowEvent& event);
-    void onUserEvent(SDL_UserEvent& event);
+    void onKeyboardEvent(SDL_KeyboardEvent event);
+    void onMouseMotionEvent(SDL_MouseMotionEvent event);
+    void onMouseButtonEvent(SDL_MouseButtonEvent event);
+    void onMouseWheelEvent(SDL_MouseWheelEvent event);
+    void onWindowEvent(SDL_WindowEvent event);
+    void onUserEvent(SDL_UserEvent event);
 };
 
 class TheApplication : public Application
@@ -114,7 +114,7 @@ void MainWindow::draw()
     }
 }
 
-void MainWindow::onKeyboardEvent(SDL_KeyboardEvent& event)
+void MainWindow::onKeyboardEvent(SDL_KeyboardEvent event)
 {
     Window::onKeyboardEvent(event);
 
@@ -131,28 +131,28 @@ void MainWindow::onKeyboardEvent(SDL_KeyboardEvent& event)
     }
 }
 
-void MainWindow::onMouseMotionEvent(SDL_MouseMotionEvent& event)
+void MainWindow::onMouseMotionEvent(SDL_MouseMotionEvent event)
 {
     Window::onMouseMotionEvent(event);
 
     root.onMouseMotionEvent(event);
 }
 
-void MainWindow::onMouseButtonEvent(SDL_MouseButtonEvent& event)
+void MainWindow::onMouseButtonEvent(SDL_MouseButtonEvent event)
 {
     Window::onMouseButtonEvent(event);
 
     root.onMouseButtonEvent(event);
 }
 
-void MainWindow::onMouseWheelEvent(SDL_MouseWheelEvent& event)
+void MainWindow::onMouseWheelEvent(SDL_MouseWheelEvent event)
 {
     Window::onMouseWheelEvent(event);
 
     root.onMouseWheelEvent(event);
 }
 
-void MainWindow::onWindowEvent(SDL_WindowEvent& event)
+void MainWindow::onWindowEvent(SDL_WindowEvent event)
 {
     Window::onWindowEvent(event);
 
@@ -178,7 +178,7 @@ void MainWindow::onWindowEvent(SDL_WindowEvent& event)
     //LOG(INFO) << "WindowEvent: " << eventName << ", windowID=" << (int)event.windowID << ", data1=" << (int)event.data1 << ", data2=" << (int)event.data2 << "\n";
 }
 
-void MainWindow::onUserEvent(SDL_UserEvent& event)
+void MainWindow::onUserEvent(SDL_UserEvent event)
 {
     if(event.code == timerEvent.code)
     {
