@@ -63,6 +63,8 @@ public:
     void drawCircle(int x, int y, int radius, SDL_Color color, int resolution);
     void fillCircleNoLock(int x, int y, int radius, Uint32 color, int resolution);
     void fillCircle(int x, int y, int radius, SDL_Color color, int resolution);
+
+    friend class Cursor;
 };
 
 #endif // SURFACE_H_INCLUDED
