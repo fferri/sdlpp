@@ -60,7 +60,8 @@ public:
     int getY();
     int getWidth();
     int getHeight();
-
+    virtual void onResize(int width, int height);
+    virtual void onMove(int x, int y);
 
     virtual Surface& getCanvas();
 

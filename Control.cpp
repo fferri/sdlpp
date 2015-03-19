@@ -232,8 +232,13 @@ void Control::onWindowEvent(SDL_WindowEvent event)
 
 void Control::setRect(SDL_Rect newRect)
 {
-    canvas.resize(newRect.w, newRect.h, true);
+    SDL_Rect oldRect = rect;
     rect = newRect;
+    canvas.resize(newRect.w, newRect.h, true);
+    if(oldRect.x != newRect.x || oldRect.y != newRect.y)
+        onMove(newRect.x, newRect.y);
+    if(oldRect.w != newRect.w || oldRect.h != newRect.h)
+        onMove(newRect.w, newRect.h);
     repaint();
 }
 
@@ -260,6 +265,14 @@ int Control::getWidth()
 int Control::getHeight()
 {
     return rect.h;
+}
+
+void Control::onResize(int width, int height)
+{
+}
+
+void Control::onMove(int x, int y)
+{
 }
 
 SDL_Rect Control::getAbsoluteRect()
