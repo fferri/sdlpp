@@ -3,6 +3,7 @@
 #include "Surface.h"
 #include "Logger.h"
 #include "Scrollbar.h"
+#include "Scrollbar2.h"
 #include "Viewport.h"
 #include "DummyControl.h"
 #include "Button.h"
@@ -24,6 +25,7 @@ class MainWindow : public Window
 private:
     Font font;
     Scrollbar scrollh, scrollv;
+    Scrollbar2 scroll2;
     Control root;
     Button button;
     DummyControl dummy;
@@ -65,6 +67,7 @@ MainWindow::MainWindow()
       root({0, 0, 640, 480}),
       scrollh({0, 460, 620, 20}),
       scrollv({620, 0, 20, 460}),
+      scroll2({40, 383, 400, 20}),
       dummy({0, 0, 1000, 1000}),
       button({40, 40, 100, 30}, "Click me", font),
       viewport({0, 0, 620, 460}, dummy),
@@ -73,11 +76,15 @@ MainWindow::MainWindow()
       partModel("name", "type"),
       partView({40, 80, 400, 300}, partModel)
 {
+    scroll2.setPos(0.1, 0.5);
+
     root.addChild(&viewport);
     root.addChild(&scrollh);
     root.addChild(&scrollv);
     root.addChild(&button);
     root.addChild(&partView);
+
+    root.addChild(&scroll2);
 
     partModel.add(40, Event::Note(20, 0, 40, 100));
     partModel.add(80, Event::Note(30, 0, 20, 100));
