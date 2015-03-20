@@ -102,7 +102,8 @@ void Scrollbar::setPos(double p)
     else pos = p;
     computeHandlePos();
     repaint();
-    callback(pos);
+    if(callback)
+        callback(pos);
 }
 
 void Scrollbar::setCallback(boost::function<void(double)> f)
