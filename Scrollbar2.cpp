@@ -76,7 +76,8 @@ void Scrollbar2::paint()
     };
     canvas.fillRect(hr.x, hr.y, hr.w, hr.h, mouseDown == Handle ? fo : fg);
 
-    if(mouseHover == Handle || mouseHover == HandleLower || mouseHover == HandleUpper)
+    if(mouseHover == Handle || mouseHover == HandleLower || mouseHover == HandleUpper
+       || mouseDown == Handle || mouseDown == HandleLower || mouseDown == HandleUpper)
         canvas.drawRect(hr.x, hr.y, hr.w, hr.h, fo);
 }
 
