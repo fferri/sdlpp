@@ -234,12 +234,10 @@ void Control::setRect(SDL_Rect newRect)
 {
     SDL_Rect oldRect = rect;
     rect = newRect;
-    canvas.resize(newRect.w, newRect.h, true);
     if(oldRect.x != newRect.x || oldRect.y != newRect.y)
         onMove(newRect.x, newRect.y);
     if(oldRect.w != newRect.w || oldRect.h != newRect.h)
         onResize(newRect.w, newRect.h);
-    repaint();
 }
 
 const SDL_Rect& Control::getRect()
@@ -269,6 +267,8 @@ int Control::getHeight()
 
 void Control::onResize(int width, int height)
 {
+    canvas.resize(newRect.w, newRect.h, true);
+    repaint();
 }
 
 void Control::onMove(int x, int y)

@@ -198,6 +198,7 @@ void Scrollbar2::onWindowEvent(SDL_WindowEvent event)
 
 void Scrollbar2::onResize(int w, int h)
 {
+    Control::onResize(w, h); // resizes canvas
     computeAllMetrics();
     repaint();
 }
